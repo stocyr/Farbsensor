@@ -1,0 +1,1909 @@
+   1              		.syntax unified
+   2              		.cpu cortex-a8
+   3              		.eabi_attribute 27, 3
+   4              		.eabi_attribute 28, 1
+   5              		.fpu vfpv3-d16
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 2
+  12              		.eabi_attribute 30, 6
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.thumb
+  16              		.file	"appXynthLedOnOff.c"
+  17              		.text
+  18              	.Ltext0:
+  19              		.cfi_sections	.debug_frame
+  20              		.comm	gpio_fd,4,4
+  21              		.section	.rodata
+  22              		.align	2
+  23              	.LC0:
+  24 0000 43616E6E 		.ascii	"Cannot open GPIO to export it\000"
+  24      6F74206F 
+  24      70656E20 
+  24      4750494F 
+  24      20746F20 
+  25 001e 0000     		.align	2
+  26              	.LC1:
+  27 0020 43616E6E 		.ascii	"Cannot open GPIO direction\000"
+  27      6F74206F 
+  27      70656E20 
+  27      4750494F 
+  27      20646972 
+  28 003b 00       		.align	2
+  29              	.LC2:
+  30 003c 43616E6E 		.ascii	"Cannot open GPIO value for 61\000"
+  30      6F74206F 
+  30      70656E20 
+  30      4750494F 
+  30      2076616C 
+  31 005a 0000     		.align	2
+  32              	.LC3:
+  33 005c 43616E6E 		.ascii	"Cannot open GPIO to unexport it\000"
+  33      6F74206F 
+  33      70656E20 
+  33      4750494F 
+  33      20746F20 
+  34              		.text
+  35              		.align	2
+  36              		.global	sysfs_gpio_handler
+  37              		.thumb
+  38              		.thumb_func
+  40              	sysfs_gpio_handler:
+  41              	.LFB2:
+  42              		.file 1 "../app/appXynthLedOnOff.c"
+   1:../app/appXynthLedOnOff.c **** /*
+   2:../app/appXynthLedOnOff.c ****  ******************************************************************************
+   3:../app/appXynthLedOnOff.c ****  * \brief   Embedded Linux Xynth Example
+   4:../app/appXynthLedOnOff.c ****  *	    Graphical control of the LED-1
+   5:../app/appXynthLedOnOff.c ****  *	    Only a minimal error handling is implemented.
+   6:../app/appXynthLedOnOff.c ****  * \file    appXynthLedOnOff.c
+   7:../app/appXynthLedOnOff.c ****  * \version 1.0
+   8:../app/appXynthLedOnOff.c ****  * \date    28.10.2013
+   9:../app/appXynthLedOnOff.c ****  * \author  Martin Aebersold
+  10:../app/appXynthLedOnOff.c ****  *
+  11:../app/appXynthLedOnOff.c ****  * \remark  Last Modifications:
+  12:../app/appXynthLedOnOff.c ****  * \remark  V1.0, AOM1, 28.10.2013
+  13:../app/appXynthLedOnOff.c ****  ******************************************************************************
+  14:../app/appXynthLedOnOff.c ****  */
+  15:../app/appXynthLedOnOff.c **** 
+  16:../app/appXynthLedOnOff.c **** #include <stdio.h>
+  17:../app/appXynthLedOnOff.c **** #include <stdlib.h>
+  18:../app/appXynthLedOnOff.c **** #include <unistd.h>
+  19:../app/appXynthLedOnOff.c **** #include <fcntl.h>
+  20:../app/appXynthLedOnOff.c **** #include <time.h>
+  21:../app/appXynthLedOnOff.c **** #include <signal.h>
+  22:../app/appXynthLedOnOff.c **** #include <string.h>
+  23:../app/appXynthLedOnOff.c **** #include <stdbool.h>
+  24:../app/appXynthLedOnOff.c **** #include <errno.h>
+  25:../app/appXynthLedOnOff.c **** 
+  26:../app/appXynthLedOnOff.c **** #include <linux/input.h>
+  27:../app/appXynthLedOnOff.c **** 
+  28:../app/appXynthLedOnOff.c **** #include <sys/types.h>
+  29:../app/appXynthLedOnOff.c **** #include <sys/stat.h>
+  30:../app/appXynthLedOnOff.c **** 
+  31:../app/appXynthLedOnOff.c **** 
+  32:../app/appXynthLedOnOff.c **** #include "xynth_.h"
+  33:../app/appXynthLedOnOff.c **** 
+  34:../app/appXynthLedOnOff.c **** /* Define some useful constants */
+  35:../app/appXynthLedOnOff.c **** #define	GPIO_SYSFS_EXPORT	0
+  36:../app/appXynthLedOnOff.c **** #define GPIO_SYSFS_DIRECTION	1
+  37:../app/appXynthLedOnOff.c **** #define GPIO_SYSFS_VALUE	2
+  38:../app/appXynthLedOnOff.c **** #define	GPIO_SYSFS_UNEXPORT	3
+  39:../app/appXynthLedOnOff.c **** 
+  40:../app/appXynthLedOnOff.c **** /* Function prototype */
+  41:../app/appXynthLedOnOff.c **** void sigint_handler(int sig);
+  42:../app/appXynthLedOnOff.c **** 
+  43:../app/appXynthLedOnOff.c **** /* Variables */
+  44:../app/appXynthLedOnOff.c **** typedef struct img_data_s
+  45:../app/appXynthLedOnOff.c ****  {
+  46:../app/appXynthLedOnOff.c ****   int imgf;       /* full screen */
+  47:../app/appXynthLedOnOff.c ****   int imgp;       /* image pos   */
+  48:../app/appXynthLedOnOff.c ****   int imgs;       /* scale image */
+  49:../app/appXynthLedOnOff.c ****   s_list_t *imgl; /* images list */
+  50:../app/appXynthLedOnOff.c ****  } img_data_t;
+  51:../app/appXynthLedOnOff.c **** 
+  52:../app/appXynthLedOnOff.c **** int gpio_fd;
+  53:../app/appXynthLedOnOff.c **** 
+  54:../app/appXynthLedOnOff.c **** /*
+  55:../app/appXynthLedOnOff.c ****  ***************************************************************************
+  56:../app/appXynthLedOnOff.c ****  * Syfs gpio handler
+  57:../app/appXynthLedOnOff.c ****  ***************************************************************************
+  58:../app/appXynthLedOnOff.c ****  */
+  59:../app/appXynthLedOnOff.c **** 
+  60:../app/appXynthLedOnOff.c **** int sysfs_gpio_handler(char str[], char gpio[], char function)
+  61:../app/appXynthLedOnOff.c ****  {
+  43              		.loc 1 61 0
+  44              		.cfi_startproc
+  45              		@ args = 0, pretend = 0, frame = 16
+  46              		@ frame_needed = 1, uses_anonymous_args = 0
+  47 0000 90B5     		push	{r4, r7, lr}
+  48              	.LCFI0:
+  49              		.cfi_def_cfa_offset 12
+  50              		.cfi_offset 4, -12
+  51              		.cfi_offset 7, -8
+  52              		.cfi_offset 14, -4
+  53 0002 85B0     		sub	sp, sp, #20
+  54              	.LCFI1:
+  55              		.cfi_def_cfa_offset 32
+  56 0004 00AF     		add	r7, sp, #0
+  57              	.LCFI2:
+  58              		.cfi_def_cfa_register 7
+  59 0006 F860     		str	r0, [r7, #12]
+  60 0008 B960     		str	r1, [r7, #8]
+  61 000a 1346     		mov	r3, r2
+  62 000c FB71     		strb	r3, [r7, #7]
+  62:../app/appXynthLedOnOff.c ****   switch (function)
+  63              		.loc 1 62 0
+  64 000e FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+  65 0010 032B     		cmp	r3, #3
+  66 0012 00F2D380 		bhi	.L2
+  67 0016 01A2     		adr	r2, .L4
+  68 0018 52F823F0 		ldr	pc, [r2, r3, lsl #2]
+  69              		.p2align 2
+  70              	.L4:
+  71 001c 2D000000 		.word	.L3+1
+  72 0020 91000000 		.word	.L5+1
+  73 0024 F5000000 		.word	.L6+1
+  74 0028 59010000 		.word	.L7+1
+  75              	.L3:
+  63:../app/appXynthLedOnOff.c ****    {
+  64:../app/appXynthLedOnOff.c ****     /* Open gpio export file descriptor */
+  65:../app/appXynthLedOnOff.c ****     case GPIO_SYSFS_EXPORT:
+  66:../app/appXynthLedOnOff.c ****      gpio_fd = open(str, O_WRONLY);
+  76              		.loc 1 66 0
+  77 002c F868     		ldr	r0, [r7, #12]
+  78 002e 0121     		movs	r1, #1
+  79 0030 FFF7FEFF 		bl	open
+  80 0034 0246     		mov	r2, r0
+  81 0036 40F20003 		movw	r3, #:lower16:gpio_fd
+  82 003a C0F20003 		movt	r3, #:upper16:gpio_fd
+  83 003e 1A60     		str	r2, [r3]
+  67:../app/appXynthLedOnOff.c ****      if (gpio_fd  < 0)
+  84              		.loc 1 67 0
+  85 0040 40F20003 		movw	r3, #:lower16:gpio_fd
+  86 0044 C0F20003 		movt	r3, #:upper16:gpio_fd
+  87 0048 1B68     		ldr	r3, [r3]
+  88 004a 002B     		cmp	r3, #0
+  89 004c 08DA     		bge	.L8
+  68:../app/appXynthLedOnOff.c ****       {
+  69:../app/appXynthLedOnOff.c ****        printf("Cannot open GPIO to export it\n");
+  90              		.loc 1 69 0
+  91 004e 40F20000 		movw	r0, #:lower16:.LC0
+  92 0052 C0F20000 		movt	r0, #:upper16:.LC0
+  93 0056 FFF7FEFF 		bl	puts
+  70:../app/appXynthLedOnOff.c ****        return -1;
+  94              		.loc 1 70 0
+  95 005a 4FF0FF33 		mov	r3, #-1
+  96 005e AEE0     		b	.L9
+  97              	.L8:
+  71:../app/appXynthLedOnOff.c ****       }
+  72:../app/appXynthLedOnOff.c ****      /* Write the gpio you want to export and close the export interface. */
+  73:../app/appXynthLedOnOff.c ****      write(gpio_fd , gpio, strlen(gpio)+1);
+  98              		.loc 1 73 0
+  99 0060 40F20003 		movw	r3, #:lower16:gpio_fd
+ 100 0064 C0F20003 		movt	r3, #:upper16:gpio_fd
+ 101 0068 1C68     		ldr	r4, [r3]
+ 102 006a B868     		ldr	r0, [r7, #8]
+ 103 006c FFF7FEFF 		bl	strlen
+ 104 0070 0346     		mov	r3, r0
+ 105 0072 0133     		adds	r3, r3, #1
+ 106 0074 2046     		mov	r0, r4
+ 107 0076 B968     		ldr	r1, [r7, #8]
+ 108 0078 1A46     		mov	r2, r3
+ 109 007a FFF7FEFF 		bl	write
+  74:../app/appXynthLedOnOff.c ****      close(gpio_fd);
+ 110              		.loc 1 74 0
+ 111 007e 40F20003 		movw	r3, #:lower16:gpio_fd
+ 112 0082 C0F20003 		movt	r3, #:upper16:gpio_fd
+ 113 0086 1B68     		ldr	r3, [r3]
+ 114 0088 1846     		mov	r0, r3
+ 115 008a FFF7FEFF 		bl	close
+  75:../app/appXynthLedOnOff.c ****     break;
+ 116              		.loc 1 75 0
+ 117 008e 95E0     		b	.L2
+ 118              	.L5:
+  76:../app/appXynthLedOnOff.c **** 
+  77:../app/appXynthLedOnOff.c ****     /* Open gpio direction file descriptor */
+  78:../app/appXynthLedOnOff.c ****     case GPIO_SYSFS_DIRECTION:
+  79:../app/appXynthLedOnOff.c ****      gpio_fd = open(str, O_RDWR);
+ 119              		.loc 1 79 0
+ 120 0090 F868     		ldr	r0, [r7, #12]
+ 121 0092 0221     		movs	r1, #2
+ 122 0094 FFF7FEFF 		bl	open
+ 123 0098 0246     		mov	r2, r0
+ 124 009a 40F20003 		movw	r3, #:lower16:gpio_fd
+ 125 009e C0F20003 		movt	r3, #:upper16:gpio_fd
+ 126 00a2 1A60     		str	r2, [r3]
+  80:../app/appXynthLedOnOff.c ****      if (gpio_fd  < 0)
+ 127              		.loc 1 80 0
+ 128 00a4 40F20003 		movw	r3, #:lower16:gpio_fd
+ 129 00a8 C0F20003 		movt	r3, #:upper16:gpio_fd
+ 130 00ac 1B68     		ldr	r3, [r3]
+ 131 00ae 002B     		cmp	r3, #0
+ 132 00b0 08DA     		bge	.L10
+  81:../app/appXynthLedOnOff.c ****       {
+  82:../app/appXynthLedOnOff.c ****        printf("Cannot open GPIO direction\n");
+ 133              		.loc 1 82 0
+ 134 00b2 40F20000 		movw	r0, #:lower16:.LC1
+ 135 00b6 C0F20000 		movt	r0, #:upper16:.LC1
+ 136 00ba FFF7FEFF 		bl	puts
+  83:../app/appXynthLedOnOff.c ****        return -1;
+ 137              		.loc 1 83 0
+ 138 00be 4FF0FF33 		mov	r3, #-1
+ 139 00c2 7CE0     		b	.L9
+ 140              	.L10:
+  84:../app/appXynthLedOnOff.c ****       }
+  85:../app/appXynthLedOnOff.c ****      /* Write the gpio direction and close the direction interface. */
+  86:../app/appXynthLedOnOff.c ****      write(gpio_fd, gpio, strlen(gpio)+1);
+ 141              		.loc 1 86 0
+ 142 00c4 40F20003 		movw	r3, #:lower16:gpio_fd
+ 143 00c8 C0F20003 		movt	r3, #:upper16:gpio_fd
+ 144 00cc 1C68     		ldr	r4, [r3]
+ 145 00ce B868     		ldr	r0, [r7, #8]
+ 146 00d0 FFF7FEFF 		bl	strlen
+ 147 00d4 0346     		mov	r3, r0
+ 148 00d6 0133     		adds	r3, r3, #1
+ 149 00d8 2046     		mov	r0, r4
+ 150 00da B968     		ldr	r1, [r7, #8]
+ 151 00dc 1A46     		mov	r2, r3
+ 152 00de FFF7FEFF 		bl	write
+  87:../app/appXynthLedOnOff.c ****      close(gpio_fd);
+ 153              		.loc 1 87 0
+ 154 00e2 40F20003 		movw	r3, #:lower16:gpio_fd
+ 155 00e6 C0F20003 		movt	r3, #:upper16:gpio_fd
+ 156 00ea 1B68     		ldr	r3, [r3]
+ 157 00ec 1846     		mov	r0, r3
+ 158 00ee FFF7FEFF 		bl	close
+  88:../app/appXynthLedOnOff.c ****     break;
+ 159              		.loc 1 88 0
+ 160 00f2 63E0     		b	.L2
+ 161              	.L6:
+  89:../app/appXynthLedOnOff.c **** 
+  90:../app/appXynthLedOnOff.c ****     /* Open gpio value file descriptor */
+  91:../app/appXynthLedOnOff.c ****     case GPIO_SYSFS_VALUE:
+  92:../app/appXynthLedOnOff.c ****      gpio_fd = open(str, O_RDWR);
+ 162              		.loc 1 92 0
+ 163 00f4 F868     		ldr	r0, [r7, #12]
+ 164 00f6 0221     		movs	r1, #2
+ 165 00f8 FFF7FEFF 		bl	open
+ 166 00fc 0246     		mov	r2, r0
+ 167 00fe 40F20003 		movw	r3, #:lower16:gpio_fd
+ 168 0102 C0F20003 		movt	r3, #:upper16:gpio_fd
+ 169 0106 1A60     		str	r2, [r3]
+  93:../app/appXynthLedOnOff.c ****      if (gpio_fd < 0)
+ 170              		.loc 1 93 0
+ 171 0108 40F20003 		movw	r3, #:lower16:gpio_fd
+ 172 010c C0F20003 		movt	r3, #:upper16:gpio_fd
+ 173 0110 1B68     		ldr	r3, [r3]
+ 174 0112 002B     		cmp	r3, #0
+ 175 0114 08DA     		bge	.L11
+  94:../app/appXynthLedOnOff.c ****       {
+  95:../app/appXynthLedOnOff.c ****        printf("Cannot open GPIO value for 61\n");
+ 176              		.loc 1 95 0
+ 177 0116 40F20000 		movw	r0, #:lower16:.LC2
+ 178 011a C0F20000 		movt	r0, #:upper16:.LC2
+ 179 011e FFF7FEFF 		bl	puts
+  96:../app/appXynthLedOnOff.c ****        return -1;
+ 180              		.loc 1 96 0
+ 181 0122 4FF0FF33 		mov	r3, #-1
+ 182 0126 4AE0     		b	.L9
+ 183              	.L11:
+  97:../app/appXynthLedOnOff.c ****       }
+  98:../app/appXynthLedOnOff.c ****      /* Write the gpio vale and close the value interface. */
+  99:../app/appXynthLedOnOff.c ****      write(gpio_fd, gpio, strlen(gpio)+1);
+ 184              		.loc 1 99 0
+ 185 0128 40F20003 		movw	r3, #:lower16:gpio_fd
+ 186 012c C0F20003 		movt	r3, #:upper16:gpio_fd
+ 187 0130 1C68     		ldr	r4, [r3]
+ 188 0132 B868     		ldr	r0, [r7, #8]
+ 189 0134 FFF7FEFF 		bl	strlen
+ 190 0138 0346     		mov	r3, r0
+ 191 013a 0133     		adds	r3, r3, #1
+ 192 013c 2046     		mov	r0, r4
+ 193 013e B968     		ldr	r1, [r7, #8]
+ 194 0140 1A46     		mov	r2, r3
+ 195 0142 FFF7FEFF 		bl	write
+ 100:../app/appXynthLedOnOff.c ****      close(gpio_fd);
+ 196              		.loc 1 100 0
+ 197 0146 40F20003 		movw	r3, #:lower16:gpio_fd
+ 198 014a C0F20003 		movt	r3, #:upper16:gpio_fd
+ 199 014e 1B68     		ldr	r3, [r3]
+ 200 0150 1846     		mov	r0, r3
+ 201 0152 FFF7FEFF 		bl	close
+ 101:../app/appXynthLedOnOff.c ****     break;
+ 202              		.loc 1 101 0
+ 203 0156 31E0     		b	.L2
+ 204              	.L7:
+ 102:../app/appXynthLedOnOff.c **** 
+ 103:../app/appXynthLedOnOff.c ****     /* Open gpio unexport file descriptor */
+ 104:../app/appXynthLedOnOff.c ****     case GPIO_SYSFS_UNEXPORT:
+ 105:../app/appXynthLedOnOff.c ****      gpio_fd = open(str, O_WRONLY);
+ 205              		.loc 1 105 0
+ 206 0158 F868     		ldr	r0, [r7, #12]
+ 207 015a 0121     		movs	r1, #1
+ 208 015c FFF7FEFF 		bl	open
+ 209 0160 0246     		mov	r2, r0
+ 210 0162 40F20003 		movw	r3, #:lower16:gpio_fd
+ 211 0166 C0F20003 		movt	r3, #:upper16:gpio_fd
+ 212 016a 1A60     		str	r2, [r3]
+ 106:../app/appXynthLedOnOff.c ****      if (gpio_fd  < 0)
+ 213              		.loc 1 106 0
+ 214 016c 40F20003 		movw	r3, #:lower16:gpio_fd
+ 215 0170 C0F20003 		movt	r3, #:upper16:gpio_fd
+ 216 0174 1B68     		ldr	r3, [r3]
+ 217 0176 002B     		cmp	r3, #0
+ 218 0178 08DA     		bge	.L12
+ 107:../app/appXynthLedOnOff.c ****       {
+ 108:../app/appXynthLedOnOff.c ****        printf("Cannot open GPIO to unexport it\n");
+ 219              		.loc 1 108 0
+ 220 017a 40F20000 		movw	r0, #:lower16:.LC3
+ 221 017e C0F20000 		movt	r0, #:upper16:.LC3
+ 222 0182 FFF7FEFF 		bl	puts
+ 109:../app/appXynthLedOnOff.c ****        return -1;
+ 223              		.loc 1 109 0
+ 224 0186 4FF0FF33 		mov	r3, #-1
+ 225 018a 18E0     		b	.L9
+ 226              	.L12:
+ 110:../app/appXynthLedOnOff.c ****       }
+ 111:../app/appXynthLedOnOff.c ****      /* Write the gpio you want to unexport and close the export interface. */
+ 112:../app/appXynthLedOnOff.c ****      write(gpio_fd , gpio, strlen(gpio)+1);
+ 227              		.loc 1 112 0
+ 228 018c 40F20003 		movw	r3, #:lower16:gpio_fd
+ 229 0190 C0F20003 		movt	r3, #:upper16:gpio_fd
+ 230 0194 1C68     		ldr	r4, [r3]
+ 231 0196 B868     		ldr	r0, [r7, #8]
+ 232 0198 FFF7FEFF 		bl	strlen
+ 233 019c 0346     		mov	r3, r0
+ 234 019e 0133     		adds	r3, r3, #1
+ 235 01a0 2046     		mov	r0, r4
+ 236 01a2 B968     		ldr	r1, [r7, #8]
+ 237 01a4 1A46     		mov	r2, r3
+ 238 01a6 FFF7FEFF 		bl	write
+ 113:../app/appXynthLedOnOff.c ****      close(gpio_fd);
+ 239              		.loc 1 113 0
+ 240 01aa 40F20003 		movw	r3, #:lower16:gpio_fd
+ 241 01ae C0F20003 		movt	r3, #:upper16:gpio_fd
+ 242 01b2 1B68     		ldr	r3, [r3]
+ 243 01b4 1846     		mov	r0, r3
+ 244 01b6 FFF7FEFF 		bl	close
+ 114:../app/appXynthLedOnOff.c ****      break;
+ 245              		.loc 1 114 0
+ 246 01ba 00BF     		nop
+ 247              	.L2:
+ 115:../app/appXynthLedOnOff.c ****    }
+ 116:../app/appXynthLedOnOff.c ****   return 0;
+ 248              		.loc 1 116 0
+ 249 01bc 0023     		movs	r3, #0
+ 250              	.L9:
+ 117:../app/appXynthLedOnOff.c ****  }
+ 251              		.loc 1 117 0
+ 252 01be 1846     		mov	r0, r3
+ 253 01c0 1437     		adds	r7, r7, #20
+ 254 01c2 BD46     		mov	sp, r7
+ 255              		@ sp needed
+ 256 01c4 90BD     		pop	{r4, r7, pc}
+ 257              		.cfi_endproc
+ 258              	.LFE2:
+ 260              		.section	.rodata
+ 261              		.align	2
+ 262              	.LC4:
+ 263 007c 0A457869 		.ascii	"\012Exit via Ctrl-C\000"
+ 263      74207669 
+ 263      61204374 
+ 263      726C2D43 
+ 263      00
+ 264 008d 000000   		.align	2
+ 265              	.LC5:
+ 266 0090 2F737973 		.ascii	"/sys/class/gpio/gpio61/value\000"
+ 266      2F636C61 
+ 266      73732F67 
+ 266      70696F2F 
+ 266      6770696F 
+ 267 00ad 000000   		.align	2
+ 268              	.LC6:
+ 269 00b0 3100     		.ascii	"1\000"
+ 270 00b2 0000     		.align	2
+ 271              	.LC7:
+ 272 00b4 2F737973 		.ascii	"/sys/class/gpio/gpio67/value\000"
+ 272      2F636C61 
+ 272      73732F67 
+ 272      70696F2F 
+ 272      6770696F 
+ 273              		.text
+ 274 01c6 00BF     		.align	2
+ 275              		.global	signal_callback_handler
+ 276              		.thumb
+ 277              		.thumb_func
+ 279              	signal_callback_handler:
+ 280              	.LFB3:
+ 118:../app/appXynthLedOnOff.c **** 
+ 119:../app/appXynthLedOnOff.c **** /*
+ 120:../app/appXynthLedOnOff.c ****  ***************************************************************************
+ 121:../app/appXynthLedOnOff.c ****  * Define the function to be called when ctrl-c (SIGINT)
+ 122:../app/appXynthLedOnOff.c ****  * signal is sent to process
+ 123:../app/appXynthLedOnOff.c ****  ***************************************************************************
+ 124:../app/appXynthLedOnOff.c ****  */
+ 125:../app/appXynthLedOnOff.c **** 
+ 126:../app/appXynthLedOnOff.c **** void signal_callback_handler(int signum)
+ 127:../app/appXynthLedOnOff.c ****  {
+ 281              		.loc 1 127 0
+ 282              		.cfi_startproc
+ 283              		@ args = 0, pretend = 0, frame = 8
+ 284              		@ frame_needed = 1, uses_anonymous_args = 0
+ 285 01c8 80B5     		push	{r7, lr}
+ 286              	.LCFI3:
+ 287              		.cfi_def_cfa_offset 8
+ 288              		.cfi_offset 7, -8
+ 289              		.cfi_offset 14, -4
+ 290 01ca 82B0     		sub	sp, sp, #8
+ 291              	.LCFI4:
+ 292              		.cfi_def_cfa_offset 16
+ 293 01cc 00AF     		add	r7, sp, #0
+ 294              	.LCFI5:
+ 295              		.cfi_def_cfa_register 7
+ 296 01ce 7860     		str	r0, [r7, #4]
+ 128:../app/appXynthLedOnOff.c ****   printf("\nExit via Ctrl-C\n");
+ 297              		.loc 1 128 0
+ 298 01d0 40F20000 		movw	r0, #:lower16:.LC4
+ 299 01d4 C0F20000 		movt	r0, #:upper16:.LC4
+ 300 01d8 FFF7FEFF 		bl	puts
+ 129:../app/appXynthLedOnOff.c **** 
+ 130:../app/appXynthLedOnOff.c ****   /* Turn the LEDs off */
+ 131:../app/appXynthLedOnOff.c ****   sysfs_gpio_handler("/sys/class/gpio/gpio61/value", "1", GPIO_SYSFS_VALUE);
+ 301              		.loc 1 131 0
+ 302 01dc 40F20000 		movw	r0, #:lower16:.LC5
+ 303 01e0 C0F20000 		movt	r0, #:upper16:.LC5
+ 304 01e4 40F20001 		movw	r1, #:lower16:.LC6
+ 305 01e8 C0F20001 		movt	r1, #:upper16:.LC6
+ 306 01ec 0222     		movs	r2, #2
+ 307 01ee FFF7FEFF 		bl	sysfs_gpio_handler
+ 132:../app/appXynthLedOnOff.c ****   sysfs_gpio_handler("/sys/class/gpio/gpio67/value", "1", GPIO_SYSFS_VALUE);
+ 308              		.loc 1 132 0
+ 309 01f2 40F20000 		movw	r0, #:lower16:.LC7
+ 310 01f6 C0F20000 		movt	r0, #:upper16:.LC7
+ 311 01fa 40F20001 		movw	r1, #:lower16:.LC6
+ 312 01fe C0F20001 		movt	r1, #:upper16:.LC6
+ 313 0202 0222     		movs	r2, #2
+ 314 0204 FFF7FEFF 		bl	sysfs_gpio_handler
+ 133:../app/appXynthLedOnOff.c **** 
+ 134:../app/appXynthLedOnOff.c ****   /* Terminate program */
+ 135:../app/appXynthLedOnOff.c ****   exit(signum);
+ 315              		.loc 1 135 0
+ 316 0208 7868     		ldr	r0, [r7, #4]
+ 317 020a FFF7FEFF 		bl	exit
+ 318              		.cfi_endproc
+ 319              	.LFE3:
+ 321              		.section	.rodata
+ 322 00d1 000000   		.align	2
+ 323              	.LC8:
+ 324 00d4 3000     		.ascii	"0\000"
+ 325              		.text
+ 326 020e 00BF     		.align	2
+ 327              		.thumb
+ 328              		.thumb_func
+ 330              	led_on:
+ 331              	.LFB4:
+ 136:../app/appXynthLedOnOff.c ****  }
+ 137:../app/appXynthLedOnOff.c **** 
+ 138:../app/appXynthLedOnOff.c **** /*
+ 139:../app/appXynthLedOnOff.c ****  ******************************************************************************
+ 140:../app/appXynthLedOnOff.c ****  * Turn the LED on
+ 141:../app/appXynthLedOnOff.c ****  ******************************************************************************
+ 142:../app/appXynthLedOnOff.c ****  */
+ 143:../app/appXynthLedOnOff.c **** 
+ 144:../app/appXynthLedOnOff.c **** static void led_on(s_window_t *window, s_event_t *event, s_handler_t *handler)
+ 145:../app/appXynthLedOnOff.c ****  {
+ 332              		.loc 1 145 0
+ 333              		.cfi_startproc
+ 334              		@ args = 0, pretend = 0, frame = 16
+ 335              		@ frame_needed = 1, uses_anonymous_args = 0
+ 336 0210 90B5     		push	{r4, r7, lr}
+ 337              	.LCFI6:
+ 338              		.cfi_def_cfa_offset 12
+ 339              		.cfi_offset 4, -12
+ 340              		.cfi_offset 7, -8
+ 341              		.cfi_offset 14, -4
+ 342 0212 87B0     		sub	sp, sp, #28
+ 343              	.LCFI7:
+ 344              		.cfi_def_cfa_offset 40
+ 345 0214 02AF     		add	r7, sp, #8
+ 346              	.LCFI8:
+ 347              		.cfi_def_cfa 7, 32
+ 348 0216 F860     		str	r0, [r7, #12]
+ 349 0218 B960     		str	r1, [r7, #8]
+ 350 021a 7A60     		str	r2, [r7, #4]
+ 146:../app/appXynthLedOnOff.c ****   /* Turn the LED-1 on */
+ 147:../app/appXynthLedOnOff.c ****   sysfs_gpio_handler("/sys/class/gpio/gpio61/value", "0", GPIO_SYSFS_VALUE);
+ 351              		.loc 1 147 0
+ 352 021c 40F20000 		movw	r0, #:lower16:.LC5
+ 353 0220 C0F20000 		movt	r0, #:upper16:.LC5
+ 354 0224 40F20001 		movw	r1, #:lower16:.LC8
+ 355 0228 C0F20001 		movt	r1, #:upper16:.LC8
+ 356 022c 0222     		movs	r2, #2
+ 357 022e FFF7FEFF 		bl	sysfs_gpio_handler
+ 148:../app/appXynthLedOnOff.c **** 
+ 149:../app/appXynthLedOnOff.c ****   s_fillbox(window->surface, 380, 200, 70, 70, s_rgbcolor(window->surface, 255, 255, 255));
+ 358              		.loc 1 149 0
+ 359 0232 FB68     		ldr	r3, [r7, #12]
+ 360 0234 5C6B     		ldr	r4, [r3, #52]
+ 361 0236 FB68     		ldr	r3, [r7, #12]
+ 362 0238 5B6B     		ldr	r3, [r3, #52]
+ 363 023a 1846     		mov	r0, r3
+ 364 023c FF21     		movs	r1, #255
+ 365 023e FF22     		movs	r2, #255
+ 366 0240 FF23     		movs	r3, #255
+ 367 0242 FFF7FEFF 		bl	s_rgbcolor
+ 368 0246 0346     		mov	r3, r0
+ 369 0248 4622     		movs	r2, #70
+ 370 024a 0092     		str	r2, [sp]
+ 371 024c 0193     		str	r3, [sp, #4]
+ 372 024e 2046     		mov	r0, r4
+ 373 0250 4FF4BE71 		mov	r1, #380
+ 374 0254 C822     		movs	r2, #200
+ 375 0256 4623     		movs	r3, #70
+ 376 0258 FFF7FEFF 		bl	s_fillbox
+ 150:../app/appXynthLedOnOff.c ****   s_fillbox(window->surface, 384, 204, 62, 62, s_rgbcolor(window->surface, 30, 255, 30));
+ 377              		.loc 1 150 0
+ 378 025c FB68     		ldr	r3, [r7, #12]
+ 379 025e 5C6B     		ldr	r4, [r3, #52]
+ 380 0260 FB68     		ldr	r3, [r7, #12]
+ 381 0262 5B6B     		ldr	r3, [r3, #52]
+ 382 0264 1846     		mov	r0, r3
+ 383 0266 1E21     		movs	r1, #30
+ 384 0268 FF22     		movs	r2, #255
+ 385 026a 1E23     		movs	r3, #30
+ 386 026c FFF7FEFF 		bl	s_rgbcolor
+ 387 0270 0346     		mov	r3, r0
+ 388 0272 3E22     		movs	r2, #62
+ 389 0274 0092     		str	r2, [sp]
+ 390 0276 0193     		str	r3, [sp, #4]
+ 391 0278 2046     		mov	r0, r4
+ 392 027a 4FF4C071 		mov	r1, #384
+ 393 027e CC22     		movs	r2, #204
+ 394 0280 3E23     		movs	r3, #62
+ 395 0282 FFF7FEFF 		bl	s_fillbox
+ 151:../app/appXynthLedOnOff.c ****   usleep(100000);
+ 396              		.loc 1 151 0
+ 397 0286 48F2A060 		movw	r0, #34464
+ 398 028a C0F20100 		movt	r0, 1
+ 399 028e FFF7FEFF 		bl	usleep
+ 152:../app/appXynthLedOnOff.c **** 
+ 153:../app/appXynthLedOnOff.c ****   s_fillbox(window->surface, 380, 200, 70, 70, s_rgbcolor(window->surface, 0, 0, 0));
+ 400              		.loc 1 153 0
+ 401 0292 FB68     		ldr	r3, [r7, #12]
+ 402 0294 5C6B     		ldr	r4, [r3, #52]
+ 403 0296 FB68     		ldr	r3, [r7, #12]
+ 404 0298 5B6B     		ldr	r3, [r3, #52]
+ 405 029a 1846     		mov	r0, r3
+ 406 029c 0021     		movs	r1, #0
+ 407 029e 0022     		movs	r2, #0
+ 408 02a0 0023     		movs	r3, #0
+ 409 02a2 FFF7FEFF 		bl	s_rgbcolor
+ 410 02a6 0346     		mov	r3, r0
+ 411 02a8 4622     		movs	r2, #70
+ 412 02aa 0092     		str	r2, [sp]
+ 413 02ac 0193     		str	r3, [sp, #4]
+ 414 02ae 2046     		mov	r0, r4
+ 415 02b0 4FF4BE71 		mov	r1, #380
+ 416 02b4 C822     		movs	r2, #200
+ 417 02b6 4623     		movs	r3, #70
+ 418 02b8 FFF7FEFF 		bl	s_fillbox
+ 154:../app/appXynthLedOnOff.c ****   s_fillbox(window->surface, 384, 204, 62, 62, s_rgbcolor(window->surface, 30, 255, 30));
+ 419              		.loc 1 154 0
+ 420 02bc FB68     		ldr	r3, [r7, #12]
+ 421 02be 5C6B     		ldr	r4, [r3, #52]
+ 422 02c0 FB68     		ldr	r3, [r7, #12]
+ 423 02c2 5B6B     		ldr	r3, [r3, #52]
+ 424 02c4 1846     		mov	r0, r3
+ 425 02c6 1E21     		movs	r1, #30
+ 426 02c8 FF22     		movs	r2, #255
+ 427 02ca 1E23     		movs	r3, #30
+ 428 02cc FFF7FEFF 		bl	s_rgbcolor
+ 429 02d0 0346     		mov	r3, r0
+ 430 02d2 3E22     		movs	r2, #62
+ 431 02d4 0092     		str	r2, [sp]
+ 432 02d6 0193     		str	r3, [sp, #4]
+ 433 02d8 2046     		mov	r0, r4
+ 434 02da 4FF4C071 		mov	r1, #384
+ 435 02de CC22     		movs	r2, #204
+ 436 02e0 3E23     		movs	r3, #62
+ 437 02e2 FFF7FEFF 		bl	s_fillbox
+ 155:../app/appXynthLedOnOff.c ****   usleep(100000);
+ 438              		.loc 1 155 0
+ 439 02e6 48F2A060 		movw	r0, #34464
+ 440 02ea C0F20100 		movt	r0, 1
+ 441 02ee FFF7FEFF 		bl	usleep
+ 156:../app/appXynthLedOnOff.c **** 
+ 157:../app/appXynthLedOnOff.c ****  }
+ 442              		.loc 1 157 0
+ 443 02f2 1437     		adds	r7, r7, #20
+ 444 02f4 BD46     		mov	sp, r7
+ 445              		@ sp needed
+ 446 02f6 90BD     		pop	{r4, r7, pc}
+ 447              		.cfi_endproc
+ 448              	.LFE4:
+ 450              		.align	2
+ 451              		.thumb
+ 452              		.thumb_func
+ 454              	led_off:
+ 455              	.LFB5:
+ 158:../app/appXynthLedOnOff.c **** 
+ 159:../app/appXynthLedOnOff.c **** /*
+ 160:../app/appXynthLedOnOff.c ****  ******************************************************************************
+ 161:../app/appXynthLedOnOff.c ****  * Turn the LED off 
+ 162:../app/appXynthLedOnOff.c ****  ******************************************************************************
+ 163:../app/appXynthLedOnOff.c ****  */
+ 164:../app/appXynthLedOnOff.c **** 
+ 165:../app/appXynthLedOnOff.c **** static void led_off(s_window_t *window, s_event_t *event, s_handler_t *handler)
+ 166:../app/appXynthLedOnOff.c ****  {
+ 456              		.loc 1 166 0
+ 457              		.cfi_startproc
+ 458              		@ args = 0, pretend = 0, frame = 16
+ 459              		@ frame_needed = 1, uses_anonymous_args = 0
+ 460 02f8 90B5     		push	{r4, r7, lr}
+ 461              	.LCFI9:
+ 462              		.cfi_def_cfa_offset 12
+ 463              		.cfi_offset 4, -12
+ 464              		.cfi_offset 7, -8
+ 465              		.cfi_offset 14, -4
+ 466 02fa 87B0     		sub	sp, sp, #28
+ 467              	.LCFI10:
+ 468              		.cfi_def_cfa_offset 40
+ 469 02fc 02AF     		add	r7, sp, #8
+ 470              	.LCFI11:
+ 471              		.cfi_def_cfa 7, 32
+ 472 02fe F860     		str	r0, [r7, #12]
+ 473 0300 B960     		str	r1, [r7, #8]
+ 474 0302 7A60     		str	r2, [r7, #4]
+ 167:../app/appXynthLedOnOff.c ****   /* Turn the LED-1 off */
+ 168:../app/appXynthLedOnOff.c ****   sysfs_gpio_handler("/sys/class/gpio/gpio61/value", "1", GPIO_SYSFS_VALUE);
+ 475              		.loc 1 168 0
+ 476 0304 40F20000 		movw	r0, #:lower16:.LC5
+ 477 0308 C0F20000 		movt	r0, #:upper16:.LC5
+ 478 030c 40F20001 		movw	r1, #:lower16:.LC6
+ 479 0310 C0F20001 		movt	r1, #:upper16:.LC6
+ 480 0314 0222     		movs	r2, #2
+ 481 0316 FFF7FEFF 		bl	sysfs_gpio_handler
+ 169:../app/appXynthLedOnOff.c **** 
+ 170:../app/appXynthLedOnOff.c **** 
+ 171:../app/appXynthLedOnOff.c ****   s_fillbox(window->surface, 158, 200, 70, 70, s_rgbcolor(window->surface, 255, 255, 255));
+ 482              		.loc 1 171 0
+ 483 031a FB68     		ldr	r3, [r7, #12]
+ 484 031c 5C6B     		ldr	r4, [r3, #52]
+ 485 031e FB68     		ldr	r3, [r7, #12]
+ 486 0320 5B6B     		ldr	r3, [r3, #52]
+ 487 0322 1846     		mov	r0, r3
+ 488 0324 FF21     		movs	r1, #255
+ 489 0326 FF22     		movs	r2, #255
+ 490 0328 FF23     		movs	r3, #255
+ 491 032a FFF7FEFF 		bl	s_rgbcolor
+ 492 032e 0346     		mov	r3, r0
+ 493 0330 4622     		movs	r2, #70
+ 494 0332 0092     		str	r2, [sp]
+ 495 0334 0193     		str	r3, [sp, #4]
+ 496 0336 2046     		mov	r0, r4
+ 497 0338 9E21     		movs	r1, #158
+ 498 033a C822     		movs	r2, #200
+ 499 033c 4623     		movs	r3, #70
+ 500 033e FFF7FEFF 		bl	s_fillbox
+ 172:../app/appXynthLedOnOff.c ****   s_fillbox(window->surface, 162, 204, 62, 62, s_rgbcolor(window->surface, 255, 30, 30));
+ 501              		.loc 1 172 0
+ 502 0342 FB68     		ldr	r3, [r7, #12]
+ 503 0344 5C6B     		ldr	r4, [r3, #52]
+ 504 0346 FB68     		ldr	r3, [r7, #12]
+ 505 0348 5B6B     		ldr	r3, [r3, #52]
+ 506 034a 1846     		mov	r0, r3
+ 507 034c FF21     		movs	r1, #255
+ 508 034e 1E22     		movs	r2, #30
+ 509 0350 1E23     		movs	r3, #30
+ 510 0352 FFF7FEFF 		bl	s_rgbcolor
+ 511 0356 0346     		mov	r3, r0
+ 512 0358 3E22     		movs	r2, #62
+ 513 035a 0092     		str	r2, [sp]
+ 514 035c 0193     		str	r3, [sp, #4]
+ 515 035e 2046     		mov	r0, r4
+ 516 0360 A221     		movs	r1, #162
+ 517 0362 CC22     		movs	r2, #204
+ 518 0364 3E23     		movs	r3, #62
+ 519 0366 FFF7FEFF 		bl	s_fillbox
+ 173:../app/appXynthLedOnOff.c ****   usleep(100000);
+ 520              		.loc 1 173 0
+ 521 036a 48F2A060 		movw	r0, #34464
+ 522 036e C0F20100 		movt	r0, 1
+ 523 0372 FFF7FEFF 		bl	usleep
+ 174:../app/appXynthLedOnOff.c **** 
+ 175:../app/appXynthLedOnOff.c ****   s_fillbox(window->surface, 158, 200, 70, 70, s_rgbcolor(window->surface, 0, 0, 0));
+ 524              		.loc 1 175 0
+ 525 0376 FB68     		ldr	r3, [r7, #12]
+ 526 0378 5C6B     		ldr	r4, [r3, #52]
+ 527 037a FB68     		ldr	r3, [r7, #12]
+ 528 037c 5B6B     		ldr	r3, [r3, #52]
+ 529 037e 1846     		mov	r0, r3
+ 530 0380 0021     		movs	r1, #0
+ 531 0382 0022     		movs	r2, #0
+ 532 0384 0023     		movs	r3, #0
+ 533 0386 FFF7FEFF 		bl	s_rgbcolor
+ 534 038a 0346     		mov	r3, r0
+ 535 038c 4622     		movs	r2, #70
+ 536 038e 0092     		str	r2, [sp]
+ 537 0390 0193     		str	r3, [sp, #4]
+ 538 0392 2046     		mov	r0, r4
+ 539 0394 9E21     		movs	r1, #158
+ 540 0396 C822     		movs	r2, #200
+ 541 0398 4623     		movs	r3, #70
+ 542 039a FFF7FEFF 		bl	s_fillbox
+ 176:../app/appXynthLedOnOff.c ****   s_fillbox(window->surface, 162, 204, 62, 62, s_rgbcolor(window->surface, 255, 30, 30));
+ 543              		.loc 1 176 0
+ 544 039e FB68     		ldr	r3, [r7, #12]
+ 545 03a0 5C6B     		ldr	r4, [r3, #52]
+ 546 03a2 FB68     		ldr	r3, [r7, #12]
+ 547 03a4 5B6B     		ldr	r3, [r3, #52]
+ 548 03a6 1846     		mov	r0, r3
+ 549 03a8 FF21     		movs	r1, #255
+ 550 03aa 1E22     		movs	r2, #30
+ 551 03ac 1E23     		movs	r3, #30
+ 552 03ae FFF7FEFF 		bl	s_rgbcolor
+ 553 03b2 0346     		mov	r3, r0
+ 554 03b4 3E22     		movs	r2, #62
+ 555 03b6 0092     		str	r2, [sp]
+ 556 03b8 0193     		str	r3, [sp, #4]
+ 557 03ba 2046     		mov	r0, r4
+ 558 03bc A221     		movs	r1, #162
+ 559 03be CC22     		movs	r2, #204
+ 560 03c0 3E23     		movs	r3, #62
+ 561 03c2 FFF7FEFF 		bl	s_fillbox
+ 177:../app/appXynthLedOnOff.c ****   usleep(100000);
+ 562              		.loc 1 177 0
+ 563 03c6 48F2A060 		movw	r0, #34464
+ 564 03ca C0F20100 		movt	r0, 1
+ 565 03ce FFF7FEFF 		bl	usleep
+ 178:../app/appXynthLedOnOff.c **** 
+ 179:../app/appXynthLedOnOff.c ****  }
+ 566              		.loc 1 179 0
+ 567 03d2 1437     		adds	r7, r7, #20
+ 568 03d4 BD46     		mov	sp, r7
+ 569              		@ sp needed
+ 570 03d6 90BD     		pop	{r4, r7, pc}
+ 571              		.cfi_endproc
+ 572              	.LFE5:
+ 574              		.align	2
+ 575              		.thumb
+ 576              		.thumb_func
+ 578              	timer0_handler:
+ 579              	.LFB6:
+ 180:../app/appXynthLedOnOff.c **** 
+ 181:../app/appXynthLedOnOff.c **** /*
+ 182:../app/appXynthLedOnOff.c ****  ******************************************************************************
+ 183:../app/appXynthLedOnOff.c ****  * Handler for timer0 
+ 184:../app/appXynthLedOnOff.c ****  ******************************************************************************
+ 185:../app/appXynthLedOnOff.c ****  */
+ 186:../app/appXynthLedOnOff.c **** 
+ 187:../app/appXynthLedOnOff.c **** static void timer0_handler(s_window_t *window, s_timer_t *timer)
+ 188:../app/appXynthLedOnOff.c ****  {
+ 580              		.loc 1 188 0
+ 581              		.cfi_startproc
+ 582              		@ args = 0, pretend = 0, frame = 8
+ 583              		@ frame_needed = 1, uses_anonymous_args = 0
+ 584 03d8 80B5     		push	{r7, lr}
+ 585              	.LCFI12:
+ 586              		.cfi_def_cfa_offset 8
+ 587              		.cfi_offset 7, -8
+ 588              		.cfi_offset 14, -4
+ 589 03da 82B0     		sub	sp, sp, #8
+ 590              	.LCFI13:
+ 591              		.cfi_def_cfa_offset 16
+ 592 03dc 00AF     		add	r7, sp, #0
+ 593              	.LCFI14:
+ 594              		.cfi_def_cfa_register 7
+ 595 03de 7860     		str	r0, [r7, #4]
+ 596 03e0 3960     		str	r1, [r7]
+ 189:../app/appXynthLedOnOff.c ****   static bool toggleFlag = 0;
+ 190:../app/appXynthLedOnOff.c **** 
+ 191:../app/appXynthLedOnOff.c ****   if (toggleFlag == true)
+ 597              		.loc 1 191 0
+ 598 03e2 40F20003 		movw	r3, #:lower16:toggleFlag.9060
+ 599 03e6 C0F20003 		movt	r3, #:upper16:toggleFlag.9060
+ 600 03ea 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 601 03ec 002B     		cmp	r3, #0
+ 602 03ee 0BD0     		beq	.L17
+ 192:../app/appXynthLedOnOff.c ****    /* Turn the LED-4 on */
+ 193:../app/appXynthLedOnOff.c ****    sysfs_gpio_handler("/sys/class/gpio/gpio67/value", "0", GPIO_SYSFS_VALUE); 
+ 603              		.loc 1 193 0
+ 604 03f0 40F20000 		movw	r0, #:lower16:.LC7
+ 605 03f4 C0F20000 		movt	r0, #:upper16:.LC7
+ 606 03f8 40F20001 		movw	r1, #:lower16:.LC8
+ 607 03fc C0F20001 		movt	r1, #:upper16:.LC8
+ 608 0400 0222     		movs	r2, #2
+ 609 0402 FFF7FEFF 		bl	sysfs_gpio_handler
+ 610 0406 0AE0     		b	.L18
+ 611              	.L17:
+ 194:../app/appXynthLedOnOff.c ****   else
+ 195:../app/appXynthLedOnOff.c ****    /* Turn the LED-4 off */
+ 196:../app/appXynthLedOnOff.c ****    sysfs_gpio_handler("/sys/class/gpio/gpio67/value", "1", GPIO_SYSFS_VALUE); 
+ 612              		.loc 1 196 0
+ 613 0408 40F20000 		movw	r0, #:lower16:.LC7
+ 614 040c C0F20000 		movt	r0, #:upper16:.LC7
+ 615 0410 40F20001 		movw	r1, #:lower16:.LC6
+ 616 0414 C0F20001 		movt	r1, #:upper16:.LC6
+ 617 0418 0222     		movs	r2, #2
+ 618 041a FFF7FEFF 		bl	sysfs_gpio_handler
+ 619              	.L18:
+ 197:../app/appXynthLedOnOff.c ****  toggleFlag = !toggleFlag;
+ 620              		.loc 1 197 0
+ 621 041e 40F20003 		movw	r3, #:lower16:toggleFlag.9060
+ 622 0422 C0F20003 		movt	r3, #:upper16:toggleFlag.9060
+ 623 0426 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 624 0428 002B     		cmp	r3, #0
+ 625 042a 0CBF     		ite	eq
+ 626 042c 0023     		moveq	r3, #0
+ 627 042e 0123     		movne	r3, #1
+ 628 0430 DBB2     		uxtb	r3, r3
+ 629 0432 83F00103 		eor	r3, r3, #1
+ 630 0436 DBB2     		uxtb	r3, r3
+ 631 0438 03F00103 		and	r3, r3, #1
+ 632 043c DAB2     		uxtb	r2, r3
+ 633 043e 40F20003 		movw	r3, #:lower16:toggleFlag.9060
+ 634 0442 C0F20003 		movt	r3, #:upper16:toggleFlag.9060
+ 635 0446 1A70     		strb	r2, [r3]
+ 198:../app/appXynthLedOnOff.c ****  }
+ 636              		.loc 1 198 0
+ 637 0448 0837     		adds	r7, r7, #8
+ 638 044a BD46     		mov	sp, r7
+ 639              		@ sp needed
+ 640 044c 80BD     		pop	{r7, pc}
+ 641              		.cfi_endproc
+ 642              	.LFE6:
+ 644              		.section	.rodata
+ 645 00d6 0000     		.align	2
+ 646              	.LC9:
+ 647 00d8 7475785F 		.ascii	"tux_80x96.png\000"
+ 647      38307839 
+ 647      362E706E 
+ 647      6700
+ 648 00e6 0000     		.align	2
+ 649              	.LC10:
+ 650 00e8 2F737973 		.ascii	"/sys/class/gpio/export\000"
+ 650      2F636C61 
+ 650      73732F67 
+ 650      70696F2F 
+ 650      6578706F 
+ 651 00ff 00       		.align	2
+ 652              	.LC11:
+ 653 0100 363100   		.ascii	"61\000"
+ 654 0103 00       		.align	2
+ 655              	.LC12:
+ 656 0104 2F737973 		.ascii	"/sys/class/gpio/gpio61/direction\000"
+ 656      2F636C61 
+ 656      73732F67 
+ 656      70696F2F 
+ 656      6770696F 
+ 657 0125 000000   		.align	2
+ 658              	.LC13:
+ 659 0128 6F757400 		.ascii	"out\000"
+ 660              		.align	2
+ 661              	.LC14:
+ 662 012c 363700   		.ascii	"67\000"
+ 663 012f 00       		.align	2
+ 664              	.LC15:
+ 665 0130 2F737973 		.ascii	"/sys/class/gpio/gpio67/direction\000"
+ 665      2F636C61 
+ 665      73732F67 
+ 665      70696F2F 
+ 665      6770696F 
+ 666 0151 000000   		.align	2
+ 667              	.LC16:
+ 668 0154 61726961 		.ascii	"arial.ttf\000"
+ 668      6C2E7474 
+ 668      6600
+ 669 015e 0000     		.align	2
+ 670              	.LC17:
+ 671 0160 58796E74 		.ascii	"Xynth LED-Demo\000"
+ 671      68204C45 
+ 671      442D4465 
+ 671      6D6F00
+ 672 016f 00       		.align	2
+ 673              	.LC18:
+ 674 0170 4C454420 		.ascii	"LED Off\000"
+ 674      4F666600 
+ 675              		.align	2
+ 676              	.LC19:
+ 677 0178 4C454420 		.ascii	"LED On\000"
+ 677      4F6E00
+ 678 017f 00       		.text
+ 679 044e 00BF     		.align	2
+ 680              		.global	main
+ 681              		.thumb
+ 682              		.thumb_func
+ 684              	main:
+ 685              	.LFB7:
+ 199:../app/appXynthLedOnOff.c **** 
+ 200:../app/appXynthLedOnOff.c **** /*
+ 201:../app/appXynthLedOnOff.c ****  ******************************************************************************
+ 202:../app/appXynthLedOnOff.c ****  * main
+ 203:../app/appXynthLedOnOff.c ****  ******************************************************************************
+ 204:../app/appXynthLedOnOff.c ****  */
+ 205:../app/appXynthLedOnOff.c **** 
+ 206:../app/appXynthLedOnOff.c **** int main (int argc, char *argv[])
+ 207:../app/appXynthLedOnOff.c ****  {
+ 686              		.loc 1 207 0
+ 687              		.cfi_startproc
+ 688              		@ args = 0, pretend = 0, frame = 48
+ 689              		@ frame_needed = 1, uses_anonymous_args = 0
+ 690 0450 B0B5     		push	{r4, r5, r7, lr}
+ 691              	.LCFI15:
+ 692              		.cfi_def_cfa_offset 16
+ 693              		.cfi_offset 4, -16
+ 694              		.cfi_offset 5, -12
+ 695              		.cfi_offset 7, -8
+ 696              		.cfi_offset 14, -4
+ 697 0452 8EB0     		sub	sp, sp, #56
+ 698              	.LCFI16:
+ 699              		.cfi_def_cfa_offset 72
+ 700 0454 02AF     		add	r7, sp, #8
+ 701              	.LCFI17:
+ 702              		.cfi_def_cfa 7, 64
+ 703 0456 7860     		str	r0, [r7, #4]
+ 704 0458 3960     		str	r1, [r7]
+ 208:../app/appXynthLedOnOff.c ****   int x;
+ 209:../app/appXynthLedOnOff.c ****   int y;
+ 210:../app/appXynthLedOnOff.c ****   int w;
+ 211:../app/appXynthLedOnOff.c ****   int h;
+ 212:../app/appXynthLedOnOff.c **** 
+ 213:../app/appXynthLedOnOff.c ****   s_font_t *font;
+ 214:../app/appXynthLedOnOff.c ****   s_handler_t *hndl;
+ 215:../app/appXynthLedOnOff.c ****   s_window_t *window;
+ 216:../app/appXynthLedOnOff.c ****   s_timer_t *timer; 
+ 217:../app/appXynthLedOnOff.c ****   s_image_t *img;
+ 218:../app/appXynthLedOnOff.c ****   char *file = "tux_80x96.png";
+ 705              		.loc 1 218 0
+ 706 045a 40F20003 		movw	r3, #:lower16:.LC9
+ 707 045e C0F20003 		movt	r3, #:upper16:.LC9
+ 708 0462 BB62     		str	r3, [r7, #40]
+ 219:../app/appXynthLedOnOff.c **** 
+ 220:../app/appXynthLedOnOff.c ****   /* Register signal and signal handler */
+ 221:../app/appXynthLedOnOff.c ****   signal(SIGINT, signal_callback_handler);
+ 709              		.loc 1 221 0
+ 710 0464 0220     		movs	r0, #2
+ 711 0466 40F20001 		movw	r1, #:lower16:signal_callback_handler
+ 712 046a C0F20001 		movt	r1, #:upper16:signal_callback_handler
+ 713 046e FFF7FEFF 		bl	signal
+ 222:../app/appXynthLedOnOff.c **** 
+ 223:../app/appXynthLedOnOff.c ****   /* Setup gpio sysfs for LED1 */
+ 224:../app/appXynthLedOnOff.c ****   sysfs_gpio_handler("/sys/class/gpio/export", "61", GPIO_SYSFS_EXPORT);
+ 714              		.loc 1 224 0
+ 715 0472 40F20000 		movw	r0, #:lower16:.LC10
+ 716 0476 C0F20000 		movt	r0, #:upper16:.LC10
+ 717 047a 40F20001 		movw	r1, #:lower16:.LC11
+ 718 047e C0F20001 		movt	r1, #:upper16:.LC11
+ 719 0482 0022     		movs	r2, #0
+ 720 0484 FFF7FEFF 		bl	sysfs_gpio_handler
+ 225:../app/appXynthLedOnOff.c ****   sysfs_gpio_handler("/sys/class/gpio/gpio61/direction", "out", GPIO_SYSFS_DIRECTION);
+ 721              		.loc 1 225 0
+ 722 0488 40F20000 		movw	r0, #:lower16:.LC12
+ 723 048c C0F20000 		movt	r0, #:upper16:.LC12
+ 724 0490 40F20001 		movw	r1, #:lower16:.LC13
+ 725 0494 C0F20001 		movt	r1, #:upper16:.LC13
+ 726 0498 0122     		movs	r2, #1
+ 727 049a FFF7FEFF 		bl	sysfs_gpio_handler
+ 226:../app/appXynthLedOnOff.c ****   sysfs_gpio_handler("/sys/class/gpio/gpio61/value", "1", GPIO_SYSFS_VALUE);
+ 728              		.loc 1 226 0
+ 729 049e 40F20000 		movw	r0, #:lower16:.LC5
+ 730 04a2 C0F20000 		movt	r0, #:upper16:.LC5
+ 731 04a6 40F20001 		movw	r1, #:lower16:.LC6
+ 732 04aa C0F20001 		movt	r1, #:upper16:.LC6
+ 733 04ae 0222     		movs	r2, #2
+ 734 04b0 FFF7FEFF 		bl	sysfs_gpio_handler
+ 227:../app/appXynthLedOnOff.c **** 
+ 228:../app/appXynthLedOnOff.c ****   /* Setup gpio sysfs for LED4 */
+ 229:../app/appXynthLedOnOff.c ****   sysfs_gpio_handler("/sys/class/gpio/export", "67", GPIO_SYSFS_EXPORT);
+ 735              		.loc 1 229 0
+ 736 04b4 40F20000 		movw	r0, #:lower16:.LC10
+ 737 04b8 C0F20000 		movt	r0, #:upper16:.LC10
+ 738 04bc 40F20001 		movw	r1, #:lower16:.LC14
+ 739 04c0 C0F20001 		movt	r1, #:upper16:.LC14
+ 740 04c4 0022     		movs	r2, #0
+ 741 04c6 FFF7FEFF 		bl	sysfs_gpio_handler
+ 230:../app/appXynthLedOnOff.c ****   sysfs_gpio_handler("/sys/class/gpio/gpio67/direction", "out", GPIO_SYSFS_DIRECTION);
+ 742              		.loc 1 230 0
+ 743 04ca 40F20000 		movw	r0, #:lower16:.LC15
+ 744 04ce C0F20000 		movt	r0, #:upper16:.LC15
+ 745 04d2 40F20001 		movw	r1, #:lower16:.LC13
+ 746 04d6 C0F20001 		movt	r1, #:upper16:.LC13
+ 747 04da 0122     		movs	r2, #1
+ 748 04dc FFF7FEFF 		bl	sysfs_gpio_handler
+ 231:../app/appXynthLedOnOff.c ****   sysfs_gpio_handler("/sys/class/gpio/gpio67/value", "1", GPIO_SYSFS_VALUE);
+ 749              		.loc 1 231 0
+ 750 04e0 40F20000 		movw	r0, #:lower16:.LC7
+ 751 04e4 C0F20000 		movt	r0, #:upper16:.LC7
+ 752 04e8 40F20001 		movw	r1, #:lower16:.LC6
+ 753 04ec C0F20001 		movt	r1, #:upper16:.LC6
+ 754 04f0 0222     		movs	r2, #2
+ 755 04f2 FFF7FEFF 		bl	sysfs_gpio_handler
+ 232:../app/appXynthLedOnOff.c **** 
+ 233:../app/appXynthLedOnOff.c ****   /* Init window and create it	*/
+ 234:../app/appXynthLedOnOff.c ****   s_window_init(&window);
+ 756              		.loc 1 234 0
+ 757 04f6 07F11003 		add	r3, r7, #16
+ 758 04fa 1846     		mov	r0, r3
+ 759 04fc FFF7FEFF 		bl	s_window_init
+ 235:../app/appXynthLedOnOff.c ****   s_window_new(window, WINDOW_TYPE_MAIN | WINDOW_TYPE_NOFORM | WINDOW_TYPE_DESKTOP, NULL);
+ 760              		.loc 1 235 0
+ 761 0500 3B69     		ldr	r3, [r7, #16]
+ 762 0502 1846     		mov	r0, r3
+ 763 0504 4FF40C61 		mov	r1, #2240
+ 764 0508 0022     		movs	r2, #0
+ 765 050a FFF7FEFF 		bl	s_window_new
+ 236:../app/appXynthLedOnOff.c ****   s_window_set_cursor(window, CURSOR_TYPE_NONE); 
+ 766              		.loc 1 236 0
+ 767 050e 3B69     		ldr	r3, [r7, #16]
+ 768 0510 1846     		mov	r0, r3
+ 769 0512 0E21     		movs	r1, #14
+ 770 0514 FFF7FEFF 		bl	s_window_set_cursor
+ 237:../app/appXynthLedOnOff.c ****   s_window_set_resizeable(window, 0);
+ 771              		.loc 1 237 0
+ 772 0518 3B69     		ldr	r3, [r7, #16]
+ 773 051a 1846     		mov	r0, r3
+ 774 051c 0021     		movs	r1, #0
+ 775 051e FFF7FEFF 		bl	s_window_set_resizeable
+ 238:../app/appXynthLedOnOff.c ****   s_window_set_alwaysontop(window, 1);
+ 776              		.loc 1 238 0
+ 777 0522 3B69     		ldr	r3, [r7, #16]
+ 778 0524 1846     		mov	r0, r3
+ 779 0526 0121     		movs	r1, #1
+ 780 0528 FFF7FEFF 		bl	s_window_set_alwaysontop
+ 239:../app/appXynthLedOnOff.c **** 
+ 240:../app/appXynthLedOnOff.c ****   /* Set width and height */
+ 241:../app/appXynthLedOnOff.c ****   w = 600;
+ 781              		.loc 1 241 0
+ 782 052c 4FF41673 		mov	r3, #600
+ 783 0530 7B62     		str	r3, [r7, #36]
+ 242:../app/appXynthLedOnOff.c ****   h = 400;
+ 784              		.loc 1 242 0
+ 785 0532 4FF4C873 		mov	r3, #400
+ 786 0536 3B62     		str	r3, [r7, #32]
+ 243:../app/appXynthLedOnOff.c ****   x = (window->surface->width - w) / 2;
+ 787              		.loc 1 243 0
+ 788 0538 3B69     		ldr	r3, [r7, #16]
+ 789 053a 5B6B     		ldr	r3, [r3, #52]
+ 790 053c 5A6B     		ldr	r2, [r3, #52]
+ 791 053e 7B6A     		ldr	r3, [r7, #36]
+ 792 0540 D31A     		subs	r3, r2, r3
+ 793 0542 DA0F     		lsrs	r2, r3, #31
+ 794 0544 1344     		add	r3, r3, r2
+ 795 0546 5B10     		asrs	r3, r3, #1
+ 796 0548 FB61     		str	r3, [r7, #28]
+ 244:../app/appXynthLedOnOff.c ****   y = (window->surface->height - h) / 2;
+ 797              		.loc 1 244 0
+ 798 054a 3B69     		ldr	r3, [r7, #16]
+ 799 054c 5B6B     		ldr	r3, [r3, #52]
+ 800 054e 9A6B     		ldr	r2, [r3, #56]
+ 801 0550 3B6A     		ldr	r3, [r7, #32]
+ 802 0552 D31A     		subs	r3, r2, r3
+ 803 0554 DA0F     		lsrs	r2, r3, #31
+ 804 0556 1344     		add	r3, r3, r2
+ 805 0558 5B10     		asrs	r3, r3, #1
+ 806 055a FB62     		str	r3, [r7, #44]
+ 245:../app/appXynthLedOnOff.c ****   s_window_set_coor(window, WINDOW_TYPE_NOFORM, x, y, w, h);
+ 807              		.loc 1 245 0
+ 808 055c 3B69     		ldr	r3, [r7, #16]
+ 809 055e 7A6A     		ldr	r2, [r7, #36]
+ 810 0560 0092     		str	r2, [sp]
+ 811 0562 3A6A     		ldr	r2, [r7, #32]
+ 812 0564 0192     		str	r2, [sp, #4]
+ 813 0566 1846     		mov	r0, r3
+ 814 0568 4021     		movs	r1, #64
+ 815 056a FA69     		ldr	r2, [r7, #28]
+ 816 056c FB6A     		ldr	r3, [r7, #44]
+ 817 056e FFF7FEFF 		bl	s_window_set_coor
+ 246:../app/appXynthLedOnOff.c ****   s_free(window->surface->vbuf);
+ 818              		.loc 1 246 0
+ 819 0572 3B69     		ldr	r3, [r7, #16]
+ 820 0574 5B6B     		ldr	r3, [r3, #52]
+ 821 0576 5B6C     		ldr	r3, [r3, #68]
+ 822 0578 1846     		mov	r0, r3
+ 823 057a FFF7FEFF 		bl	s_free
+ 247:../app/appXynthLedOnOff.c ****   window->surface->width = w;
+ 824              		.loc 1 247 0
+ 825 057e 3B69     		ldr	r3, [r7, #16]
+ 826 0580 5B6B     		ldr	r3, [r3, #52]
+ 827 0582 7A6A     		ldr	r2, [r7, #36]
+ 828 0584 5A63     		str	r2, [r3, #52]
+ 248:../app/appXynthLedOnOff.c ****   window->surface->height = h;
+ 829              		.loc 1 248 0
+ 830 0586 3B69     		ldr	r3, [r7, #16]
+ 831 0588 5B6B     		ldr	r3, [r3, #52]
+ 832 058a 3A6A     		ldr	r2, [r7, #32]
+ 833 058c 9A63     		str	r2, [r3, #56]
+ 249:../app/appXynthLedOnOff.c ****   window->surface->vbuf = (unsigned char *) malloc(w * h * window->surface->bytesperpixel);
+ 834              		.loc 1 249 0
+ 835 058e 3B69     		ldr	r3, [r7, #16]
+ 836 0590 5C6B     		ldr	r4, [r3, #52]
+ 837 0592 7B6A     		ldr	r3, [r7, #36]
+ 838 0594 3A6A     		ldr	r2, [r7, #32]
+ 839 0596 02FB03F3 		mul	r3, r2, r3
+ 840 059a 3A69     		ldr	r2, [r7, #16]
+ 841 059c 526B     		ldr	r2, [r2, #52]
+ 842 059e 5268     		ldr	r2, [r2, #4]
+ 843 05a0 02FB03F3 		mul	r3, r2, r3
+ 844 05a4 1846     		mov	r0, r3
+ 845 05a6 FFF7FEFF 		bl	malloc
+ 846 05aa 0346     		mov	r3, r0
+ 847 05ac 6364     		str	r3, [r4, #68]
+ 250:../app/appXynthLedOnOff.c **** 
+ 251:../app/appXynthLedOnOff.c ****   /* Draw window with a gradient color */
+ 252:../app/appXynthLedOnOff.c ****   s_fillbox(window->surface, 0, 0, w, h, s_rgbcolor(window->surface, 0, 0, 0));
+ 848              		.loc 1 252 0
+ 849 05ae 3B69     		ldr	r3, [r7, #16]
+ 850 05b0 5C6B     		ldr	r4, [r3, #52]
+ 851 05b2 3B69     		ldr	r3, [r7, #16]
+ 852 05b4 5B6B     		ldr	r3, [r3, #52]
+ 853 05b6 1846     		mov	r0, r3
+ 854 05b8 0021     		movs	r1, #0
+ 855 05ba 0022     		movs	r2, #0
+ 856 05bc 0023     		movs	r3, #0
+ 857 05be FFF7FEFF 		bl	s_rgbcolor
+ 858 05c2 0346     		mov	r3, r0
+ 859 05c4 3A6A     		ldr	r2, [r7, #32]
+ 860 05c6 0092     		str	r2, [sp]
+ 861 05c8 0193     		str	r3, [sp, #4]
+ 862 05ca 2046     		mov	r0, r4
+ 863 05cc 0021     		movs	r1, #0
+ 864 05ce 0022     		movs	r2, #0
+ 865 05d0 7B6A     		ldr	r3, [r7, #36]
+ 866 05d2 FFF7FEFF 		bl	s_fillbox
+ 253:../app/appXynthLedOnOff.c ****   for (y=2; y<h-2; y++)
+ 867              		.loc 1 253 0
+ 868 05d6 0223     		movs	r3, #2
+ 869 05d8 FB62     		str	r3, [r7, #44]
+ 870 05da 4DE0     		b	.L20
+ 871              	.L21:
+ 254:../app/appXynthLedOnOff.c ****    {
+ 255:../app/appXynthLedOnOff.c ****     s_fillbox(window->surface, 2, y, w - 4, 1, s_rgbcolor(window->surface, 255 - (int) ((float) y *
+ 872              		.loc 1 255 0 discriminator 2
+ 873 05dc 3B69     		ldr	r3, [r7, #16]
+ 874 05de 5D6B     		ldr	r5, [r3, #52]
+ 875 05e0 7B6A     		ldr	r3, [r7, #36]
+ 876 05e2 1C1F     		subs	r4, r3, #4
+ 877 05e4 3B69     		ldr	r3, [r7, #16]
+ 878 05e6 596B     		ldr	r1, [r3, #52]
+ 879 05e8 FB6A     		ldr	r3, [r7, #44]
+ 880 05ea 06EE903A 		fmsr	s13, r3	@ int
+ 881 05ee F8EEE67A 		fsitos	s15, s13
+ 882 05f2 B7EEE76A 		fcvtds	d6, s15
+ 883 05f6 9FED1C7B 		fldd	d7, .L23
+ 884 05fa 26EE076B 		fmuld	d6, d6, d7
+ 885 05fe 9FED1C7B 		fldd	d7, .L23+8
+ 886 0602 86EE077B 		fdivd	d7, d6, d7
+ 887 0606 FDEEC76B 		ftosizd	s13, d7
+ 888 060a 16EE903A 		fmrs	r3, s13	@ int
+ 889 060e C3F1FF02 		rsb	r2, r3, #255
+ 256:../app/appXynthLedOnOff.c ****                                                                            255 - (int) ((float) y *
+ 890              		.loc 1 256 0 discriminator 2
+ 891 0612 FB6A     		ldr	r3, [r7, #44]
+ 892 0614 07EE103A 		fmsr	s14, r3	@ int
+ 893 0618 F8EEC77A 		fsitos	s15, s14
+ 894 061c B7EEE76A 		fcvtds	d6, s15
+ 895 0620 9FED117B 		fldd	d7, .L23
+ 896 0624 26EE076B 		fmuld	d6, d6, d7
+ 897 0628 9FED117B 		fldd	d7, .L23+8
+ 898 062c 86EE077B 		fdivd	d7, d6, d7
+ 899 0630 FDEEC76B 		ftosizd	s13, d7
+ 900 0634 16EE903A 		fmrs	r3, s13	@ int
+ 255:../app/appXynthLedOnOff.c ****     s_fillbox(window->surface, 2, y, w - 4, 1, s_rgbcolor(window->surface, 255 - (int) ((float) y *
+ 901              		.loc 1 255 0 discriminator 2
+ 902 0638 C3F1FF03 		rsb	r3, r3, #255
+ 903 063c 0846     		mov	r0, r1
+ 904 063e 1146     		mov	r1, r2
+ 905 0640 1A46     		mov	r2, r3
+ 906 0642 FF23     		movs	r3, #255
+ 907 0644 FFF7FEFF 		bl	s_rgbcolor
+ 908 0648 0346     		mov	r3, r0
+ 909 064a 0122     		movs	r2, #1
+ 910 064c 0092     		str	r2, [sp]
+ 911 064e 0193     		str	r3, [sp, #4]
+ 912 0650 2846     		mov	r0, r5
+ 913 0652 0221     		movs	r1, #2
+ 914 0654 FA6A     		ldr	r2, [r7, #44]
+ 915 0656 2346     		mov	r3, r4
+ 916 0658 FFF7FEFF 		bl	s_fillbox
+ 253:../app/appXynthLedOnOff.c ****   for (y=2; y<h-2; y++)
+ 917              		.loc 1 253 0 discriminator 2
+ 918 065c FB6A     		ldr	r3, [r7, #44]
+ 919 065e 0133     		adds	r3, r3, #1
+ 920 0660 FB62     		str	r3, [r7, #44]
+ 921 0662 09E0     		b	.L24
+ 922              	.L25:
+ 923 0664 AFF30080 		.align	3
+ 924              	.L23:
+ 925 0668 00000000 		.word	0
+ 926 066c 00E06F40 		.word	1081073664
+ 927 0670 00000000 		.word	0
+ 928 0674 00007940 		.word	1081671680
+ 929              	.L24:
+ 930              	.L20:
+ 253:../app/appXynthLedOnOff.c ****   for (y=2; y<h-2; y++)
+ 931              		.loc 1 253 0 is_stmt 0 discriminator 1
+ 932 0678 3B6A     		ldr	r3, [r7, #32]
+ 933 067a 9A1E     		subs	r2, r3, #2
+ 934 067c FB6A     		ldr	r3, [r7, #44]
+ 935 067e 9A42     		cmp	r2, r3
+ 936 0680 ACDC     		bgt	.L21
+ 257:../app/appXynthLedOnOff.c **** 		                                                           255));
+ 258:../app/appXynthLedOnOff.c ****    }
+ 259:../app/appXynthLedOnOff.c **** 
+ 260:../app/appXynthLedOnOff.c ****   /* Initialize img struct */
+ 261:../app/appXynthLedOnOff.c ****   s_image_init(&img);
+ 937              		.loc 1 261 0 is_stmt 1
+ 938 0682 07F10803 		add	r3, r7, #8
+ 939 0686 1846     		mov	r0, r3
+ 940 0688 FFF7FEFF 		bl	s_image_init
+ 262:../app/appXynthLedOnOff.c ****   s_image_img(file, img);
+ 941              		.loc 1 262 0
+ 942 068c BB68     		ldr	r3, [r7, #8]
+ 943 068e B86A     		ldr	r0, [r7, #40]
+ 944 0690 1946     		mov	r1, r3
+ 945 0692 FFF7FEFF 		bl	s_image_img
+ 263:../app/appXynthLedOnOff.c **** 
+ 264:../app/appXynthLedOnOff.c ****   /* Paste img to the surface */
+ 265:../app/appXynthLedOnOff.c ****   s_putboxrgba(window->surface, 30 + img->x, 20 + img->y, img->w, img->h, img->rgba);
+ 946              		.loc 1 265 0
+ 947 0696 3B69     		ldr	r3, [r7, #16]
+ 948 0698 586B     		ldr	r0, [r3, #52]
+ 949 069a BB68     		ldr	r3, [r7, #8]
+ 950 069c 5B68     		ldr	r3, [r3, #4]
+ 951 069e 03F11E01 		add	r1, r3, #30
+ 952 06a2 BB68     		ldr	r3, [r7, #8]
+ 953 06a4 9B68     		ldr	r3, [r3, #8]
+ 954 06a6 03F11402 		add	r2, r3, #20
+ 955 06aa BB68     		ldr	r3, [r7, #8]
+ 956 06ac DB68     		ldr	r3, [r3, #12]
+ 957 06ae BC68     		ldr	r4, [r7, #8]
+ 958 06b0 2569     		ldr	r5, [r4, #16]
+ 959 06b2 BC68     		ldr	r4, [r7, #8]
+ 960 06b4 646A     		ldr	r4, [r4, #36]
+ 961 06b6 0095     		str	r5, [sp]
+ 962 06b8 0194     		str	r4, [sp, #4]
+ 963 06ba FFF7FEFF 		bl	s_putboxrgba
+ 266:../app/appXynthLedOnOff.c **** 
+ 267:../app/appXynthLedOnOff.c ****   /* Uninitialize img struct */
+ 268:../app/appXynthLedOnOff.c ****   s_image_uninit(img);
+ 964              		.loc 1 268 0
+ 965 06be BB68     		ldr	r3, [r7, #8]
+ 966 06c0 1846     		mov	r0, r3
+ 967 06c2 FFF7FEFF 		bl	s_image_uninit
+ 269:../app/appXynthLedOnOff.c **** 
+ 270:../app/appXynthLedOnOff.c ****   /* Setup the fonts for the heading text */
+ 271:../app/appXynthLedOnOff.c ****   s_font_init(&font, "arial.ttf");
+ 968              		.loc 1 271 0
+ 969 06c6 07F11803 		add	r3, r7, #24
+ 970 06ca 1846     		mov	r0, r3
+ 971 06cc 40F20001 		movw	r1, #:lower16:.LC16
+ 972 06d0 C0F20001 		movt	r1, #:upper16:.LC16
+ 973 06d4 FFF7FEFF 		bl	s_font_init
+ 272:../app/appXynthLedOnOff.c ****   s_font_set_str(font, "Xynth LED-Demo");
+ 974              		.loc 1 272 0
+ 975 06d8 BB69     		ldr	r3, [r7, #24]
+ 976 06da 1846     		mov	r0, r3
+ 977 06dc 40F20001 		movw	r1, #:lower16:.LC17
+ 978 06e0 C0F20001 		movt	r1, #:upper16:.LC17
+ 979 06e4 FFF7FEFF 		bl	s_font_set_str
+ 273:../app/appXynthLedOnOff.c ****   s_font_set_size(font, 32);
+ 980              		.loc 1 273 0
+ 981 06e8 BB69     		ldr	r3, [r7, #24]
+ 982 06ea 1846     		mov	r0, r3
+ 983 06ec 2021     		movs	r1, #32
+ 984 06ee FFF7FEFF 		bl	s_font_set_size
+ 274:../app/appXynthLedOnOff.c ****   s_font_get_glyph(font);
+ 985              		.loc 1 274 0
+ 986 06f2 BB69     		ldr	r3, [r7, #24]
+ 987 06f4 1846     		mov	r0, r3
+ 988 06f6 FFF7FEFF 		bl	s_font_get_glyph
+ 275:../app/appXynthLedOnOff.c ****   s_image_get_handler(font->glyph.img);
+ 989              		.loc 1 275 0
+ 990 06fa BB69     		ldr	r3, [r7, #24]
+ 991 06fc DB6B     		ldr	r3, [r3, #60]
+ 992 06fe 1846     		mov	r0, r3
+ 993 0700 FFF7FEFF 		bl	s_image_get_handler
+ 276:../app/appXynthLedOnOff.c ****   s_putboxrgba(window->surface, 165, 80, font->glyph.img->w, font->glyph.img->h, font->glyph.img->r
+ 994              		.loc 1 276 0
+ 995 0704 3B69     		ldr	r3, [r7, #16]
+ 996 0706 5A6B     		ldr	r2, [r3, #52]
+ 997 0708 BB69     		ldr	r3, [r7, #24]
+ 998 070a DB6B     		ldr	r3, [r3, #60]
+ 999 070c DB68     		ldr	r3, [r3, #12]
+ 1000 070e B969     		ldr	r1, [r7, #24]
+ 1001 0710 C96B     		ldr	r1, [r1, #60]
+ 1002 0712 0869     		ldr	r0, [r1, #16]
+ 1003 0714 B969     		ldr	r1, [r7, #24]
+ 1004 0716 C96B     		ldr	r1, [r1, #60]
+ 1005 0718 496A     		ldr	r1, [r1, #36]
+ 1006 071a 0090     		str	r0, [sp]
+ 1007 071c 0191     		str	r1, [sp, #4]
+ 1008 071e 1046     		mov	r0, r2
+ 1009 0720 A521     		movs	r1, #165
+ 1010 0722 5022     		movs	r2, #80
+ 1011 0724 FFF7FEFF 		bl	s_putboxrgba
+ 277:../app/appXynthLedOnOff.c ****   s_fillbox(window->surface, 165, 80 + font->glyph.img->h + 2, font->glyph.img->w, 2, 0);
+ 1012              		.loc 1 277 0
+ 1013 0728 3B69     		ldr	r3, [r7, #16]
+ 1014 072a 596B     		ldr	r1, [r3, #52]
+ 1015 072c BB69     		ldr	r3, [r7, #24]
+ 1016 072e DB6B     		ldr	r3, [r3, #60]
+ 1017 0730 1B69     		ldr	r3, [r3, #16]
+ 1018 0732 03F15202 		add	r2, r3, #82
+ 1019 0736 BB69     		ldr	r3, [r7, #24]
+ 1020 0738 DB6B     		ldr	r3, [r3, #60]
+ 1021 073a DB68     		ldr	r3, [r3, #12]
+ 1022 073c 0220     		movs	r0, #2
+ 1023 073e 0090     		str	r0, [sp]
+ 1024 0740 0020     		movs	r0, #0
+ 1025 0742 0190     		str	r0, [sp, #4]
+ 1026 0744 0846     		mov	r0, r1
+ 1027 0746 A521     		movs	r1, #165
+ 1028 0748 FFF7FEFF 		bl	s_fillbox
+ 278:../app/appXynthLedOnOff.c ****   s_font_uninit(font);
+ 1029              		.loc 1 278 0
+ 1030 074c BB69     		ldr	r3, [r7, #24]
+ 1031 074e 1846     		mov	r0, r3
+ 1032 0750 FFF7FEFF 		bl	s_font_uninit
+ 279:../app/appXynthLedOnOff.c **** 
+ 280:../app/appXynthLedOnOff.c ****   /* Create the red button */
+ 281:../app/appXynthLedOnOff.c ****   s_fillbox(window->surface, 158, 200, 70, 70, s_rgbcolor(window->surface, 0, 0, 0));
+ 1033              		.loc 1 281 0
+ 1034 0754 3B69     		ldr	r3, [r7, #16]
+ 1035 0756 5C6B     		ldr	r4, [r3, #52]
+ 1036 0758 3B69     		ldr	r3, [r7, #16]
+ 1037 075a 5B6B     		ldr	r3, [r3, #52]
+ 1038 075c 1846     		mov	r0, r3
+ 1039 075e 0021     		movs	r1, #0
+ 1040 0760 0022     		movs	r2, #0
+ 1041 0762 0023     		movs	r3, #0
+ 1042 0764 FFF7FEFF 		bl	s_rgbcolor
+ 1043 0768 0346     		mov	r3, r0
+ 1044 076a 4622     		movs	r2, #70
+ 1045 076c 0092     		str	r2, [sp]
+ 1046 076e 0193     		str	r3, [sp, #4]
+ 1047 0770 2046     		mov	r0, r4
+ 1048 0772 9E21     		movs	r1, #158
+ 1049 0774 C822     		movs	r2, #200
+ 1050 0776 4623     		movs	r3, #70
+ 1051 0778 FFF7FEFF 		bl	s_fillbox
+ 282:../app/appXynthLedOnOff.c ****   s_fillbox(window->surface, 162, 204, 62, 62, s_rgbcolor(window->surface, 255, 30, 30));
+ 1052              		.loc 1 282 0
+ 1053 077c 3B69     		ldr	r3, [r7, #16]
+ 1054 077e 5C6B     		ldr	r4, [r3, #52]
+ 1055 0780 3B69     		ldr	r3, [r7, #16]
+ 1056 0782 5B6B     		ldr	r3, [r3, #52]
+ 1057 0784 1846     		mov	r0, r3
+ 1058 0786 FF21     		movs	r1, #255
+ 1059 0788 1E22     		movs	r2, #30
+ 1060 078a 1E23     		movs	r3, #30
+ 1061 078c FFF7FEFF 		bl	s_rgbcolor
+ 1062 0790 0346     		mov	r3, r0
+ 1063 0792 3E22     		movs	r2, #62
+ 1064 0794 0092     		str	r2, [sp]
+ 1065 0796 0193     		str	r3, [sp, #4]
+ 1066 0798 2046     		mov	r0, r4
+ 1067 079a A221     		movs	r1, #162
+ 1068 079c CC22     		movs	r2, #204
+ 1069 079e 3E23     		movs	r3, #62
+ 1070 07a0 FFF7FEFF 		bl	s_fillbox
+ 283:../app/appXynthLedOnOff.c **** 
+ 284:../app/appXynthLedOnOff.c ****   /* Setup the fonts for the led off text */
+ 285:../app/appXynthLedOnOff.c ****   s_font_init(&font, "arial.ttf");
+ 1071              		.loc 1 285 0
+ 1072 07a4 07F11803 		add	r3, r7, #24
+ 1073 07a8 1846     		mov	r0, r3
+ 1074 07aa 40F20001 		movw	r1, #:lower16:.LC16
+ 1075 07ae C0F20001 		movt	r1, #:upper16:.LC16
+ 1076 07b2 FFF7FEFF 		bl	s_font_init
+ 286:../app/appXynthLedOnOff.c ****   s_font_set_str(font, "LED Off");
+ 1077              		.loc 1 286 0
+ 1078 07b6 BB69     		ldr	r3, [r7, #24]
+ 1079 07b8 1846     		mov	r0, r3
+ 1080 07ba 40F20001 		movw	r1, #:lower16:.LC18
+ 1081 07be C0F20001 		movt	r1, #:upper16:.LC18
+ 1082 07c2 FFF7FEFF 		bl	s_font_set_str
+ 287:../app/appXynthLedOnOff.c ****   s_font_set_size(font, 20);
+ 1083              		.loc 1 287 0
+ 1084 07c6 BB69     		ldr	r3, [r7, #24]
+ 1085 07c8 1846     		mov	r0, r3
+ 1086 07ca 1421     		movs	r1, #20
+ 1087 07cc FFF7FEFF 		bl	s_font_set_size
+ 288:../app/appXynthLedOnOff.c ****   s_font_set_rgb(font, 255, 255, 0);
+ 1088              		.loc 1 288 0
+ 1089 07d0 BB69     		ldr	r3, [r7, #24]
+ 1090 07d2 1846     		mov	r0, r3
+ 1091 07d4 FF21     		movs	r1, #255
+ 1092 07d6 FF22     		movs	r2, #255
+ 1093 07d8 0023     		movs	r3, #0
+ 1094 07da FFF7FEFF 		bl	s_font_set_rgb
+ 289:../app/appXynthLedOnOff.c ****   s_font_get_glyph(font);
+ 1095              		.loc 1 289 0
+ 1096 07de BB69     		ldr	r3, [r7, #24]
+ 1097 07e0 1846     		mov	r0, r3
+ 1098 07e2 FFF7FEFF 		bl	s_font_get_glyph
+ 290:../app/appXynthLedOnOff.c ****   s_image_get_handler(font->glyph.img); 
+ 1099              		.loc 1 290 0
+ 1100 07e6 BB69     		ldr	r3, [r7, #24]
+ 1101 07e8 DB6B     		ldr	r3, [r3, #60]
+ 1102 07ea 1846     		mov	r0, r3
+ 1103 07ec FFF7FEFF 		bl	s_image_get_handler
+ 291:../app/appXynthLedOnOff.c ****   s_putboxrgba(window->surface, 156, 180, font->glyph.img->w, font->glyph.img->h, font->glyph.img->
+ 1104              		.loc 1 291 0
+ 1105 07f0 3B69     		ldr	r3, [r7, #16]
+ 1106 07f2 5A6B     		ldr	r2, [r3, #52]
+ 1107 07f4 BB69     		ldr	r3, [r7, #24]
+ 1108 07f6 DB6B     		ldr	r3, [r3, #60]
+ 1109 07f8 DB68     		ldr	r3, [r3, #12]
+ 1110 07fa B969     		ldr	r1, [r7, #24]
+ 1111 07fc C96B     		ldr	r1, [r1, #60]
+ 1112 07fe 0869     		ldr	r0, [r1, #16]
+ 1113 0800 B969     		ldr	r1, [r7, #24]
+ 1114 0802 C96B     		ldr	r1, [r1, #60]
+ 1115 0804 496A     		ldr	r1, [r1, #36]
+ 1116 0806 0090     		str	r0, [sp]
+ 1117 0808 0191     		str	r1, [sp, #4]
+ 1118 080a 1046     		mov	r0, r2
+ 1119 080c 9C21     		movs	r1, #156
+ 1120 080e B422     		movs	r2, #180
+ 1121 0810 FFF7FEFF 		bl	s_putboxrgba
+ 292:../app/appXynthLedOnOff.c ****   s_font_uninit(font);
+ 1122              		.loc 1 292 0
+ 1123 0814 BB69     		ldr	r3, [r7, #24]
+ 1124 0816 1846     		mov	r0, r3
+ 1125 0818 FFF7FEFF 		bl	s_font_uninit
+ 293:../app/appXynthLedOnOff.c **** 	
+ 294:../app/appXynthLedOnOff.c ****   /* Install the mouse callback handler for the led_off button */
+ 295:../app/appXynthLedOnOff.c ****   s_handler_init(&hndl);
+ 1126              		.loc 1 295 0
+ 1127 081c 07F11403 		add	r3, r7, #20
+ 1128 0820 1846     		mov	r0, r3
+ 1129 0822 FFF7FEFF 		bl	s_handler_init
+ 296:../app/appXynthLedOnOff.c ****   hndl->type = MOUSE_HANDLER;
+ 1130              		.loc 1 296 0
+ 1131 0826 7B69     		ldr	r3, [r7, #20]
+ 1132 0828 0122     		movs	r2, #1
+ 1133 082a 1A60     		str	r2, [r3]
+ 297:../app/appXynthLedOnOff.c ****   hndl->mouse.x = 160;
+ 1134              		.loc 1 297 0
+ 1135 082c 7B69     		ldr	r3, [r7, #20]
+ 1136 082e A022     		movs	r2, #160
+ 1137 0830 5A60     		str	r2, [r3, #4]
+ 298:../app/appXynthLedOnOff.c ****   hndl->mouse.y = 200;
+ 1138              		.loc 1 298 0
+ 1139 0832 7B69     		ldr	r3, [r7, #20]
+ 1140 0834 C822     		movs	r2, #200
+ 1141 0836 9A60     		str	r2, [r3, #8]
+ 299:../app/appXynthLedOnOff.c ****   hndl->mouse.w = 100;
+ 1142              		.loc 1 299 0
+ 1143 0838 7B69     		ldr	r3, [r7, #20]
+ 1144 083a 6422     		movs	r2, #100
+ 1145 083c DA60     		str	r2, [r3, #12]
+ 300:../app/appXynthLedOnOff.c ****   hndl->mouse.h = 100;
+ 1146              		.loc 1 300 0
+ 1147 083e 7B69     		ldr	r3, [r7, #20]
+ 1148 0840 6422     		movs	r2, #100
+ 1149 0842 1A61     		str	r2, [r3, #16]
+ 301:../app/appXynthLedOnOff.c ****   hndl->mouse.o = led_off;
+ 1150              		.loc 1 301 0
+ 1151 0844 7A69     		ldr	r2, [r7, #20]
+ 1152 0846 40F20003 		movw	r3, #:lower16:led_off
+ 1153 084a C0F20003 		movt	r3, #:upper16:led_off
+ 1154 084e 5362     		str	r3, [r2, #36]
+ 302:../app/appXynthLedOnOff.c ****   hndl->mouse.button = MOUSE_BUTTON_LEFT;
+ 1155              		.loc 1 302 0
+ 1156 0850 7B69     		ldr	r3, [r7, #20]
+ 1157 0852 0422     		movs	r2, #4
+ 1158 0854 5A61     		str	r2, [r3, #20]
+ 303:../app/appXynthLedOnOff.c ****   s_handler_add(window, hndl);
+ 1159              		.loc 1 303 0
+ 1160 0856 3A69     		ldr	r2, [r7, #16]
+ 1161 0858 7B69     		ldr	r3, [r7, #20]
+ 1162 085a 1046     		mov	r0, r2
+ 1163 085c 1946     		mov	r1, r3
+ 1164 085e FFF7FEFF 		bl	s_handler_add
+ 304:../app/appXynthLedOnOff.c **** 
+ 305:../app/appXynthLedOnOff.c ****   /* Create the green button */
+ 306:../app/appXynthLedOnOff.c ****   s_fillbox(window->surface, 380, 200, 70, 70, s_rgbcolor(window->surface, 0, 0, 0));
+ 1165              		.loc 1 306 0
+ 1166 0862 3B69     		ldr	r3, [r7, #16]
+ 1167 0864 5C6B     		ldr	r4, [r3, #52]
+ 1168 0866 3B69     		ldr	r3, [r7, #16]
+ 1169 0868 5B6B     		ldr	r3, [r3, #52]
+ 1170 086a 1846     		mov	r0, r3
+ 1171 086c 0021     		movs	r1, #0
+ 1172 086e 0022     		movs	r2, #0
+ 1173 0870 0023     		movs	r3, #0
+ 1174 0872 FFF7FEFF 		bl	s_rgbcolor
+ 1175 0876 0346     		mov	r3, r0
+ 1176 0878 4622     		movs	r2, #70
+ 1177 087a 0092     		str	r2, [sp]
+ 1178 087c 0193     		str	r3, [sp, #4]
+ 1179 087e 2046     		mov	r0, r4
+ 1180 0880 4FF4BE71 		mov	r1, #380
+ 1181 0884 C822     		movs	r2, #200
+ 1182 0886 4623     		movs	r3, #70
+ 1183 0888 FFF7FEFF 		bl	s_fillbox
+ 307:../app/appXynthLedOnOff.c ****   s_fillbox(window->surface, 384, 204, 62, 62, s_rgbcolor(window->surface, 30, 255, 30));
+ 1184              		.loc 1 307 0
+ 1185 088c 3B69     		ldr	r3, [r7, #16]
+ 1186 088e 5C6B     		ldr	r4, [r3, #52]
+ 1187 0890 3B69     		ldr	r3, [r7, #16]
+ 1188 0892 5B6B     		ldr	r3, [r3, #52]
+ 1189 0894 1846     		mov	r0, r3
+ 1190 0896 1E21     		movs	r1, #30
+ 1191 0898 FF22     		movs	r2, #255
+ 1192 089a 1E23     		movs	r3, #30
+ 1193 089c FFF7FEFF 		bl	s_rgbcolor
+ 1194 08a0 0346     		mov	r3, r0
+ 1195 08a2 3E22     		movs	r2, #62
+ 1196 08a4 0092     		str	r2, [sp]
+ 1197 08a6 0193     		str	r3, [sp, #4]
+ 1198 08a8 2046     		mov	r0, r4
+ 1199 08aa 4FF4C071 		mov	r1, #384
+ 1200 08ae CC22     		movs	r2, #204
+ 1201 08b0 3E23     		movs	r3, #62
+ 1202 08b2 FFF7FEFF 		bl	s_fillbox
+ 308:../app/appXynthLedOnOff.c **** 
+ 309:../app/appXynthLedOnOff.c ****   /* Setup the fonts for the led_on text */
+ 310:../app/appXynthLedOnOff.c ****   s_font_init(&font, "arial.ttf");
+ 1203              		.loc 1 310 0
+ 1204 08b6 07F11803 		add	r3, r7, #24
+ 1205 08ba 1846     		mov	r0, r3
+ 1206 08bc 40F20001 		movw	r1, #:lower16:.LC16
+ 1207 08c0 C0F20001 		movt	r1, #:upper16:.LC16
+ 1208 08c4 FFF7FEFF 		bl	s_font_init
+ 311:../app/appXynthLedOnOff.c ****   s_font_set_str(font, "LED On");
+ 1209              		.loc 1 311 0
+ 1210 08c8 BB69     		ldr	r3, [r7, #24]
+ 1211 08ca 1846     		mov	r0, r3
+ 1212 08cc 40F20001 		movw	r1, #:lower16:.LC19
+ 1213 08d0 C0F20001 		movt	r1, #:upper16:.LC19
+ 1214 08d4 FFF7FEFF 		bl	s_font_set_str
+ 312:../app/appXynthLedOnOff.c ****   s_font_set_size(font, 20);
+ 1215              		.loc 1 312 0
+ 1216 08d8 BB69     		ldr	r3, [r7, #24]
+ 1217 08da 1846     		mov	r0, r3
+ 1218 08dc 1421     		movs	r1, #20
+ 1219 08de FFF7FEFF 		bl	s_font_set_size
+ 313:../app/appXynthLedOnOff.c ****   s_font_set_rgb(font, 255, 255, 0);
+ 1220              		.loc 1 313 0
+ 1221 08e2 BB69     		ldr	r3, [r7, #24]
+ 1222 08e4 1846     		mov	r0, r3
+ 1223 08e6 FF21     		movs	r1, #255
+ 1224 08e8 FF22     		movs	r2, #255
+ 1225 08ea 0023     		movs	r3, #0
+ 1226 08ec FFF7FEFF 		bl	s_font_set_rgb
+ 314:../app/appXynthLedOnOff.c ****   s_font_get_glyph(font);
+ 1227              		.loc 1 314 0
+ 1228 08f0 BB69     		ldr	r3, [r7, #24]
+ 1229 08f2 1846     		mov	r0, r3
+ 1230 08f4 FFF7FEFF 		bl	s_font_get_glyph
+ 315:../app/appXynthLedOnOff.c ****   s_image_get_handler(font->glyph.img);
+ 1231              		.loc 1 315 0
+ 1232 08f8 BB69     		ldr	r3, [r7, #24]
+ 1233 08fa DB6B     		ldr	r3, [r3, #60]
+ 1234 08fc 1846     		mov	r0, r3
+ 1235 08fe FFF7FEFF 		bl	s_image_get_handler
+ 316:../app/appXynthLedOnOff.c ****   s_putboxrgba(window->surface, 380, 180, font->glyph.img->w, font->glyph.img->h, font->glyph.img->
+ 1236              		.loc 1 316 0
+ 1237 0902 3B69     		ldr	r3, [r7, #16]
+ 1238 0904 5A6B     		ldr	r2, [r3, #52]
+ 1239 0906 BB69     		ldr	r3, [r7, #24]
+ 1240 0908 DB6B     		ldr	r3, [r3, #60]
+ 1241 090a DB68     		ldr	r3, [r3, #12]
+ 1242 090c B969     		ldr	r1, [r7, #24]
+ 1243 090e C96B     		ldr	r1, [r1, #60]
+ 1244 0910 0869     		ldr	r0, [r1, #16]
+ 1245 0912 B969     		ldr	r1, [r7, #24]
+ 1246 0914 C96B     		ldr	r1, [r1, #60]
+ 1247 0916 496A     		ldr	r1, [r1, #36]
+ 1248 0918 0090     		str	r0, [sp]
+ 1249 091a 0191     		str	r1, [sp, #4]
+ 1250 091c 1046     		mov	r0, r2
+ 1251 091e 4FF4BE71 		mov	r1, #380
+ 1252 0922 B422     		movs	r2, #180
+ 1253 0924 FFF7FEFF 		bl	s_putboxrgba
+ 317:../app/appXynthLedOnOff.c ****   s_font_uninit(font);
+ 1254              		.loc 1 317 0
+ 1255 0928 BB69     		ldr	r3, [r7, #24]
+ 1256 092a 1846     		mov	r0, r3
+ 1257 092c FFF7FEFF 		bl	s_font_uninit
+ 318:../app/appXynthLedOnOff.c **** 
+ 319:../app/appXynthLedOnOff.c ****   /* Install the mouse callback handler for the led_on button */
+ 320:../app/appXynthLedOnOff.c ****   s_handler_init(&hndl);
+ 1258              		.loc 1 320 0
+ 1259 0930 07F11403 		add	r3, r7, #20
+ 1260 0934 1846     		mov	r0, r3
+ 1261 0936 FFF7FEFF 		bl	s_handler_init
+ 321:../app/appXynthLedOnOff.c ****   hndl->type = MOUSE_HANDLER;
+ 1262              		.loc 1 321 0
+ 1263 093a 7B69     		ldr	r3, [r7, #20]
+ 1264 093c 0122     		movs	r2, #1
+ 1265 093e 1A60     		str	r2, [r3]
+ 322:../app/appXynthLedOnOff.c ****   hndl->mouse.x = 380;
+ 1266              		.loc 1 322 0
+ 1267 0940 7B69     		ldr	r3, [r7, #20]
+ 1268 0942 4FF4BE72 		mov	r2, #380
+ 1269 0946 5A60     		str	r2, [r3, #4]
+ 323:../app/appXynthLedOnOff.c ****   hndl->mouse.y = 200;
+ 1270              		.loc 1 323 0
+ 1271 0948 7B69     		ldr	r3, [r7, #20]
+ 1272 094a C822     		movs	r2, #200
+ 1273 094c 9A60     		str	r2, [r3, #8]
+ 324:../app/appXynthLedOnOff.c ****   hndl->mouse.w = 100;
+ 1274              		.loc 1 324 0
+ 1275 094e 7B69     		ldr	r3, [r7, #20]
+ 1276 0950 6422     		movs	r2, #100
+ 1277 0952 DA60     		str	r2, [r3, #12]
+ 325:../app/appXynthLedOnOff.c ****   hndl->mouse.h = 100;
+ 1278              		.loc 1 325 0
+ 1279 0954 7B69     		ldr	r3, [r7, #20]
+ 1280 0956 6422     		movs	r2, #100
+ 1281 0958 1A61     		str	r2, [r3, #16]
+ 326:../app/appXynthLedOnOff.c ****   hndl->mouse.o = led_on;
+ 1282              		.loc 1 326 0
+ 1283 095a 7A69     		ldr	r2, [r7, #20]
+ 1284 095c 40F20003 		movw	r3, #:lower16:led_on
+ 1285 0960 C0F20003 		movt	r3, #:upper16:led_on
+ 1286 0964 5362     		str	r3, [r2, #36]
+ 327:../app/appXynthLedOnOff.c ****   hndl->mouse.button = MOUSE_BUTTON_LEFT;
+ 1287              		.loc 1 327 0
+ 1288 0966 7B69     		ldr	r3, [r7, #20]
+ 1289 0968 0422     		movs	r2, #4
+ 1290 096a 5A61     		str	r2, [r3, #20]
+ 328:../app/appXynthLedOnOff.c ****   s_handler_add(window, hndl);
+ 1291              		.loc 1 328 0
+ 1292 096c 3A69     		ldr	r2, [r7, #16]
+ 1293 096e 7B69     		ldr	r3, [r7, #20]
+ 1294 0970 1046     		mov	r0, r2
+ 1295 0972 1946     		mov	r1, r3
+ 1296 0974 FFF7FEFF 		bl	s_handler_add
+ 329:../app/appXynthLedOnOff.c **** 
+ 330:../app/appXynthLedOnOff.c ****   /* Setup a timer handler */
+ 331:../app/appXynthLedOnOff.c ****   s_timer_init(&timer);
+ 1297              		.loc 1 331 0
+ 1298 0978 07F10C03 		add	r3, r7, #12
+ 1299 097c 1846     		mov	r0, r3
+ 1300 097e FFF7FEFF 		bl	s_timer_init
+ 332:../app/appXynthLedOnOff.c ****   timer->timeval = 1000;
+ 1301              		.loc 1 332 0
+ 1302 0982 F968     		ldr	r1, [r7, #12]
+ 1303 0984 4FF47A72 		mov	r2, #1000
+ 1304 0988 4FF00003 		mov	r3, #0
+ 1305 098c C1E90023 		strd	r2, [r1]
+ 333:../app/appXynthLedOnOff.c ****   timer->cb = timer0_handler;
+ 1306              		.loc 1 333 0
+ 1307 0990 FA68     		ldr	r2, [r7, #12]
+ 1308 0992 40F20003 		movw	r3, #:lower16:timer0_handler
+ 1309 0996 C0F20003 		movt	r3, #:upper16:timer0_handler
+ 1310 099a 1361     		str	r3, [r2, #16]
+ 334:../app/appXynthLedOnOff.c ****   s_timer_add(window, timer);
+ 1311              		.loc 1 334 0
+ 1312 099c 3A69     		ldr	r2, [r7, #16]
+ 1313 099e FB68     		ldr	r3, [r7, #12]
+ 1314 09a0 1046     		mov	r0, r2
+ 1315 09a2 1946     		mov	r1, r3
+ 1316 09a4 FFF7FEFF 		bl	s_timer_add
+ 335:../app/appXynthLedOnOff.c **** 
+ 336:../app/appXynthLedOnOff.c ****   /* Show the window on the screen */
+ 337:../app/appXynthLedOnOff.c ****   s_window_show(window);
+ 1317              		.loc 1 337 0
+ 1318 09a8 3B69     		ldr	r3, [r7, #16]
+ 1319 09aa 1846     		mov	r0, r3
+ 1320 09ac FFF7FEFF 		bl	s_window_show
+ 338:../app/appXynthLedOnOff.c ****   s_window_main(window);
+ 1321              		.loc 1 338 0
+ 1322 09b0 3B69     		ldr	r3, [r7, #16]
+ 1323 09b2 1846     		mov	r0, r3
+ 1324 09b4 FFF7FEFF 		bl	s_window_main
+ 339:../app/appXynthLedOnOff.c **** 	
+ 340:../app/appXynthLedOnOff.c ****   return 0;
+ 1325              		.loc 1 340 0
+ 1326 09b8 0023     		movs	r3, #0
+ 341:../app/appXynthLedOnOff.c ****  }
+ 1327              		.loc 1 341 0
+ 1328 09ba 1846     		mov	r0, r3
+ 1329 09bc 3037     		adds	r7, r7, #48
+ 1330 09be BD46     		mov	sp, r7
+ 1331              		@ sp needed
+ 1332 09c0 B0BD     		pop	{r4, r5, r7, pc}
+ 1333              		.cfi_endproc
+ 1334              	.LFE7:
+ 1336              		.local	toggleFlag.9060
+ 1337              		.comm	toggleFlag.9060,1,1
+ 1338              	.Letext0:
+ 1339              		.file 2 "/opt/embedded/sitara/rootfs/usr/local/include/xynth.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 appXynthLedOnOff.c
+                            *COM*:00000004 gpio_fd
+     /tmp/ccbHNOsX.s:22     .rodata:00000000 $d
+     /tmp/ccbHNOsX.s:23     .rodata:00000000 .LC0
+     /tmp/ccbHNOsX.s:26     .rodata:00000020 .LC1
+     /tmp/ccbHNOsX.s:29     .rodata:0000003c .LC2
+     /tmp/ccbHNOsX.s:32     .rodata:0000005c .LC3
+     /tmp/ccbHNOsX.s:35     .text:00000000 $t
+     /tmp/ccbHNOsX.s:40     .text:00000000 sysfs_gpio_handler
+     /tmp/ccbHNOsX.s:71     .text:0000001c $d
+     /tmp/ccbHNOsX.s:77     .text:0000002c $t
+     /tmp/ccbHNOsX.s:262    .rodata:0000007c .LC4
+     /tmp/ccbHNOsX.s:265    .rodata:00000090 .LC5
+     /tmp/ccbHNOsX.s:268    .rodata:000000b0 .LC6
+     /tmp/ccbHNOsX.s:271    .rodata:000000b4 .LC7
+     /tmp/ccbHNOsX.s:279    .text:000001c8 signal_callback_handler
+     /tmp/ccbHNOsX.s:323    .rodata:000000d4 .LC8
+     /tmp/ccbHNOsX.s:330    .text:00000210 led_on
+     /tmp/ccbHNOsX.s:454    .text:000002f8 led_off
+     /tmp/ccbHNOsX.s:578    .text:000003d8 timer0_handler
+                             .bss:00000000 toggleFlag.9060
+     /tmp/ccbHNOsX.s:646    .rodata:000000d8 .LC9
+     /tmp/ccbHNOsX.s:649    .rodata:000000e8 .LC10
+     /tmp/ccbHNOsX.s:652    .rodata:00000100 .LC11
+     /tmp/ccbHNOsX.s:655    .rodata:00000104 .LC12
+     /tmp/ccbHNOsX.s:658    .rodata:00000128 .LC13
+     /tmp/ccbHNOsX.s:661    .rodata:0000012c .LC14
+     /tmp/ccbHNOsX.s:664    .rodata:00000130 .LC15
+     /tmp/ccbHNOsX.s:667    .rodata:00000154 .LC16
+     /tmp/ccbHNOsX.s:670    .rodata:00000160 .LC17
+     /tmp/ccbHNOsX.s:673    .rodata:00000170 .LC18
+     /tmp/ccbHNOsX.s:676    .rodata:00000178 .LC19
+     /tmp/ccbHNOsX.s:684    .text:00000450 main
+     /tmp/ccbHNOsX.s:925    .text:00000668 $d
+     /tmp/ccbHNOsX.s:932    .text:00000678 $t
+                     .debug_frame:00000010 $d
+                             .bss:00000000 $d
+                           .group:00000000 wm4.1.e568e69ea5f3c4ef0200c392d4cf940e
+                           .group:00000000 wm4.predefs.h.20.efe75994f87070b04a0acc2e05ce785f
+                           .group:00000000 wm4.stdcpredef.h.34.342d06bacdf16b5dcab5f28b985f2198
+                           .group:00000000 wm4.features.h.19.9ee3c42bde04aef8d26d8625c4f42754
+                           .group:00000000 wm4.cdefs.h.20.b3afe02c7fce4d545688e15e2e1c6579
+                           .group:00000000 wm4.cdefs.h.407.c122ddb2157a4c1fbd957332b50319ec
+                           .group:00000000 wm4.stubshard.h.10.f345199155dd326dd0d8d8f7bb011cdd
+                           .group:00000000 wm4.stdio.h.31.e39a94e203ad4e1d978c0fc68ce016ee
+                           .group:00000000 wm4.stddef.h.184.159df79b4ca79c76561572a55985524c
+                           .group:00000000 wm4.types.h.98.23475b1b9f80fb971178f409979b9402
+                           .group:00000000 wm4.typesizes.h.24.2d14ad3b2b7de983a3c88949abdb786c
+                           .group:00000000 wm4.stdio.h.36.2dd12c1fd035242ad5cfd0152a01be5a
+                           .group:00000000 wm4._G_config.h.5.b0f37d9e474454cf6e459063458db32f
+                           .group:00000000 wm4.stddef.h.234.5fa44232df77937e0d1fcac1468785aa
+                           .group:00000000 wm4.wchar.h.80.628010d306c9ecbd260f9d4475ab1db1
+                           .group:00000000 wm4._G_config.h.46.5187c97b14fd664662cb32e6b94fc49e
+                           .group:00000000 wm4.libio.h.34.5329345d19de76111aed1a6ff6d11a75
+                           .group:00000000 wm4.stdarg.h.34.3a23a216c0c293b3d2ea2e89281481e6
+                           .group:00000000 wm4.libio.h.52.b59b07fe8b0bf3842d57d5058d497d93
+                           .group:00000000 wm4.stdio.h.80.2c0b67e94eb93fd8dd1cc22c150ce71c
+                           .group:00000000 wm4.stdio_lim.h.23.557290a6cddeba0587f574f29e3a5fb9
+                           .group:00000000 wm4.stdio.h.172.df21df34a7396d7da2e08f9b617d582f
+                           .group:00000000 wm4.stdlib.h.27.59e2586c75bdbcb991b248ad7257b993
+                           .group:00000000 wm4.stddef.h.234.6f23eed7302c690ea7fa44a242ca26d6
+                           .group:00000000 wm4.waitflags.h.25.f56331828b5cc76f944a22c96459a9b6
+                           .group:00000000 wm4.waitstatus.h.28.93f167f49d64e2b9b99f98d1162a93bf
+                           .group:00000000 wm4.endian.h.19.ff00c9c0f5e9f9a9719c5de76ace57b4
+                           .group:00000000 wm4.endian.h.41.24cced64aef71195a51d4daa8e4f4a95
+                           .group:00000000 wm4.byteswap.h.24.6de22b9768c31ef70ef7a1f4de56b5c7
+                           .group:00000000 wm4.byteswap.h.37.1c4149605040ec9122a34b040ff7383d
+                           .group:00000000 wm4.endian.h.63.99653ab2386785ec6f4e6e95e3b547d9
+                           .group:00000000 wm4.waitstatus.h.99.408b6270fa6eb71377201a241ef15f79
+                           .group:00000000 wm4.stdlib.h.50.84aeca2ac6f37d40e1e9b3cef757ba2d
+                           .group:00000000 wm4.types.h.23.573ad1a89dc22cd016df19820a2f3c3c
+                           .group:00000000 wm4.time.h.53.beb46e650cd406cb917b6b96b45e640a
+                           .group:00000000 wm4.stddef.h.234.7b49b621169e2007451b8fadbcc644ca
+                           .group:00000000 wm4.types.h.190.a4e69612e2dc33722796b53d8f1c418d
+                           .group:00000000 wm4.select.h.25.df647f04fce2d846f134ede6a14ddf91
+                           .group:00000000 wm4.sigset.h.21.0fa4fa7356d0a375809a5a65c08b5399
+                           .group:00000000 wm4.select.h.36.f76c3b9e55c871743863013cc4cc14c9
+                           .group:00000000 wm4.time.h.66.e70ce69790c975f0efb369340c432e0b
+                           .group:00000000 wm4.time.h.25.72fdfa5826e4e33a45f01b6b43c97e79
+                           .group:00000000 wm4.select.h.49.5062e7117766526526e41607c5714bde
+                           .group:00000000 wm4.sysmacros.h.21.a9f5c7b78d72ee534a0aa637d6fe1260
+                           .group:00000000 wm4.types.h.232.d6201e0aea2715ba7eb29e7600c4b823
+                           .group:00000000 wm4.pthreadtypes.h.19.2fbb4e7db0a497c5ee699fc650b3bb52
+                           .group:00000000 wm4.alloca.h.19.edefa922a76c1cbaaf1e416903ba2d1c
+                           .group:00000000 wm4.alloca.h.29.156e12058824cc23d961c4d3b13031f6
+                           .group:00000000 wm4.unistd.h.23.3409b9351ef5b6fb393683a213f55fdc
+                           .group:00000000 wm4.posix_opt.h.20.8587404e00639bdcc5f6a74591f95259
+                           .group:00000000 wm4.environments.h.66.b5fa11eac545424b5f6d05323c4a09ea
+                           .group:00000000 wm4.unistd.h.210.b40c6c15db1d0b653f8dce03f258da9c
+                           .group:00000000 wm4.unistd.h.256.82150b59ed14cff36f21f0c267325ac1
+                           .group:00000000 wm4.confname.h.28.185ec6df8f1481e4f1ad18617f31160b
+                           .group:00000000 wm4.unistd.h.1097.58cc6c8a634be1f24d301b0c95873fdf
+                           .group:00000000 wm4.fcntl.h.23.e3b23fe2586530450a29ac6d733d2ef4
+                           .group:00000000 wm4.fcntllinux.h.42.d8c16b4e9f33ce1d8c5c7ea11cb5f507
+                           .group:00000000 wm4.time.h.66.fa652aa18ecf92239cee124d5533fe97
+                           .group:00000000 wm4.stat.h.23.29c4e2d9c33ff7e449ff08678ac9b104
+                           .group:00000000 wm4.fcntl.h.70.c84fe719e8e8ee7ebd4ffc8aaaaed870
+                           .group:00000000 wm4.time.h.26.6a3cabd4f228e226db6723a3b0c81ba6
+                           .group:00000000 wm4.time.h.40.5b5a469681d6c4226697d1e8cc575ccd
+                           .group:00000000 wm4.sigset.h.43.6280a3a872023bffbed206f425b9fc20
+                           .group:00000000 wm4.signal.h.38.4a14efc2703c3c0d68cf889b778c4bb4
+                           .group:00000000 wm4.signum.h.22.4c1d620de4eecd5f9eeda9c80ba0f113
+                           .group:00000000 wm4.siginfo.h.29.14cffde8b7749c61d5b08500e79e50b5
+                           .group:00000000 wm4.signal.h.194.ec3d8b68a8b34b97b3355f0841989bb1
+                           .group:00000000 wm4.sigaction.h.36.df07c9e0e47f7c4a9420057185f38c34
+                           .group:00000000 wm4.signal.h.321.12385ac78f7bf4a00a88d3297da8b091
+                           .group:00000000 wm4.stddef.h.397.05b44c4bade28bd66c6e6cda98e155d1
+                           .group:00000000 wm4.sigstack.h.36.385688ed1383a3aea429a07cd7f554d3
+                           .group:00000000 wm4.ucontext.h.33.72aa6d914695594c2e32c783c4bbc1c0
+                           .group:00000000 wm4.string.h.23.8394011d5995a16f15d67d04e84a1d69
+                           .group:00000000 wm4.stdbool.h.29.1c9ee6859ce8145f7838a4f2549ccec2
+                           .group:00000000 wm4.errno.h.21.234adedf0a908ba1512bb39778d0c13a
+                           .group:00000000 wm4.errnobase.h.2.3ec77d86fa6012e288bd2eb28191253f
+                           .group:00000000 wm4.errno.h.6.d43c577612d28bd675401c1a34f20893
+                           .group:00000000 wm4.errno.h.27.5f4b88dc9507696aecbaa61ffb4828e0
+                           .group:00000000 wm4.time.h.20.f4adaa691c881da51f0c51b32325ca0f
+                           .group:00000000 wm4.time.h.96.e27bb624260f78c4b30ec5e5472154e3
+                           .group:00000000 wm4.ioctls.h.2.03b3da7d8e33b177ad5463747e6ea638
+                           .group:00000000 wm4.ioctl.h.2.bd321bb10ef8829cffaafdeb92ffe6e8
+                           .group:00000000 wm4.ioctls.h.19.07e4cc2c8c812072c776e7126c9af930
+                           .group:00000000 wm4.ioctls.h.26.e53f3dba0fbd4d9bb8bfb8b61ffc6c03
+                           .group:00000000 wm4.ioctltypes.h.35.75bed46f7a741dbc88d7147aee66fe8f
+                           .group:00000000 wm4.ttydefaults.h.41.76470547474c31dba482768bc6c29e71
+                           .group:00000000 wm4.bitsperlong.h.2.99eda57597e4f78880c08a5435106f4b
+                           .group:00000000 wm4.stddef.h.2.654a7028c59070e28a81f96a9691be86
+                           .group:00000000 wm4.posix_types.h.21.8fee0fe924cab96144f2875ec36e8c55
+                           .group:00000000 wm4.types.h.19.3fb40f0a43646050dce70b77e8abd456
+                           .group:00000000 wm4.input.h.32.01f083d66adb262ce9e0b92be6a5cb64
+                           .group:00000000 wm4.stat.h.24.17342c1a0b6fd923e6461162cb5f0637
+                           .group:00000000 wm4.stat.h.109.5028a86f0b330f07ff41a081d79101ac
+                           .group:00000000 wm4.stdarg.h.31.56f6a3c098ee5fdedcf1801c4b576fd0
+                           .group:00000000 wm4.ctype.h.24.1647c25e59b842f10acb634e3bca9d11
+                           .group:00000000 wm4.config.h.6.c55635c9a6125dcb6428548f31f87051
+                           .group:00000000 wm4.xynth_.h.34.cbe377f23d4325ad371e6a5e4bed5e1e
+                           .group:00000000 wm4.poll.h.25.4794564d2ea323f989c3a733e572c363
+                           .group:00000000 wm4.uio.h.23.aa0898d8f5bb12d9ecd480ebbdbd1a4d
+                           .group:00000000 wm4.socket.h.20.08bd3c6531df306b747ad30a61a6808b
+                           .group:00000000 wm4.socket_type.h.28.5a26c72aa620989d56a4a7f4b904e12a
+                           .group:00000000 wm4.socket.h.41.83751b40953d747165a1114825ee386e
+                           .group:00000000 wm4.sockaddr.h.24.5297ada35f27e227f2701d6f498f937f
+                           .group:00000000 wm4.socket.h.156.ffe5faad01edc5f010695d6c93ee1c0a
+                           .group:00000000 wm4.sockios.h.2.f8858dac1442298d2f68317d32593816
+                           .group:00000000 wm4.socket.h.7.bea12a844334172feab6f272171f68e5
+                           .group:00000000 wm4.socket.h.56.a6bf203d7e8f63fd413e0e4023c832dd
+                           .group:00000000 wm4.un.h.19.0299d7149998148f51cf0b239b4f52b1
+                           .group:00000000 wm4.wchar.h.20.b2f3c382c3c51d5efc265bb945e2cce7
+                           .group:00000000 wm4.stdint.h.52.9fcba825823a9ccd523cfb63e04b63be
+                           .group:00000000 wm4.in.h.34.f9847a7f48b3e190d9a7f8cdd86ff914
+                           .group:00000000 wm4.in.h.27.aa54e6d780d363dcc80e63c60aa594c4
+                           .group:00000000 wm4.in.h.399.68ad154aeb0f418b85494740eb07df58
+
+UNDEFINED SYMBOLS
+open
+puts
+strlen
+write
+close
+exit
+s_rgbcolor
+s_fillbox
+usleep
+signal
+s_window_init
+s_window_new
+s_window_set_cursor
+s_window_set_resizeable
+s_window_set_alwaysontop
+s_window_set_coor
+s_free
+malloc
+s_image_init
+s_image_img
+s_putboxrgba
+s_image_uninit
+s_font_init
+s_font_set_str
+s_font_set_size
+s_font_get_glyph
+s_image_get_handler
+s_font_uninit
+s_font_set_rgb
+s_handler_init
+s_handler_add
+s_timer_init
+s_timer_add
+s_window_show
+s_window_main

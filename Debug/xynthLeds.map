@@ -1,0 +1,761 @@
+Archive member included because of file (symbol)
+
+/opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/libc_nonshared.a(elf-init.oS)
+                              /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/crt1.o (__libc_csu_init)
+
+Allocating common symbols
+Common symbol       size              file
+
+gpio_fd             0x4               ./app/appXynthDemo.o
+
+Discarded input sections
+
+ .note.GNU-stack
+                0x00000000        0x0 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/crt1.o
+ .note.GNU-stack
+                0x00000000        0x0 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/crti.o
+ .note.GNU-stack
+                0x00000000        0x0 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../lib/gcc/arm-linux-gnueabihf/4.8.2/crtbegin.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .group         0x00000000        0x8 ./app/appXynthDemo.o
+ .note.GNU-stack
+                0x00000000        0x0 ./app/appXynthDemo.o
+ .note.GNU-stack
+                0x00000000        0x0 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/libc_nonshared.a(elf-init.oS)
+ .note.GNU-stack
+                0x00000000        0x0 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../lib/gcc/arm-linux-gnueabihf/4.8.2/crtend.o
+ .note.GNU-stack
+                0x00000000        0x0 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/crtn.o
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+LOAD /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/crt1.o
+LOAD /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/crti.o
+LOAD /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../lib/gcc/arm-linux-gnueabihf/4.8.2/crtbegin.o
+LOAD ./app/appXynthDemo.o
+LOAD /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../lib/gcc/arm-linux-gnueabihf/4.8.2/../../../../arm-linux-gnueabihf/lib/libstdc++.so
+LOAD /opt/embedded/sitara/rootfs/usr/local/lib/libxynth.so
+LOAD /opt/embedded/sitara/rootfs/usr/local/lib/libwidget.so
+LOAD /opt/embedded/sitara/rootfs/usr/local/lib/libwidgetoo.so
+LOAD /opt/embedded/sitara/rootfs/usr/lib/libSDL.so
+LOAD /opt/embedded/sitara/rootfs/usr/lib/libdirect.so
+LOAD /opt/embedded/sitara/rootfs/usr/lib/libdirectfb.so
+LOAD /opt/embedded/sitara/rootfs/usr/lib/libfusion.so
+LOAD /opt/embedded/sitara/rootfs/usr/local/lib/libts.so
+LOAD /opt/embedded/sitara/rootfs/usr/lib/libz.so
+LOAD /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/libm.so
+LOAD /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../lib/gcc/arm-linux-gnueabihf/4.8.2/libgcc.a
+LOAD /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../lib/gcc/arm-linux-gnueabihf/4.8.2/../../../../arm-linux-gnueabihf/lib/libgcc_s.so
+START GROUP
+LOAD /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../lib/gcc/arm-linux-gnueabihf/4.8.2/../../../../arm-linux-gnueabihf/lib/libgcc_s.so.1
+LOAD /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../lib/gcc/arm-linux-gnueabihf/4.8.2/libgcc.a
+END GROUP
+LOAD /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/libc.so
+START GROUP
+LOAD /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/lib/arm-linux-gnueabihf/libc.so.6
+LOAD /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/libc_nonshared.a
+LOAD /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/lib/ld-linux-armhf.so.3
+END GROUP
+LOAD /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../lib/gcc/arm-linux-gnueabihf/4.8.2/libgcc.a
+LOAD /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../lib/gcc/arm-linux-gnueabihf/4.8.2/../../../../arm-linux-gnueabihf/lib/libgcc_s.so
+START GROUP
+LOAD /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../lib/gcc/arm-linux-gnueabihf/4.8.2/../../../../arm-linux-gnueabihf/lib/libgcc_s.so.1
+LOAD /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../lib/gcc/arm-linux-gnueabihf/4.8.2/libgcc.a
+END GROUP
+LOAD /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../lib/gcc/arm-linux-gnueabihf/4.8.2/crtend.o
+LOAD /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/crtn.o
+                0x00008000                PROVIDE (__executable_start, 0x8000)
+                0x00008134                . = (0x8000 + SIZEOF_HEADERS)
+
+.interp         0x00008134       0x19
+ *(.interp)
+ .interp        0x00008134       0x19 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/crt1.o
+
+.note.ABI-tag   0x00008150       0x20
+ .note.ABI-tag  0x00008150       0x20 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/crt1.o
+
+.note.gnu.build-id
+                0x00008170       0x24
+ *(.note.gnu.build-id)
+ .note.gnu.build-id
+                0x00008170       0x24 linker stubs
+
+.hash           0x00008194      0x16c
+ *(.hash)
+ .hash          0x00008194      0x16c /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/crt1.o
+
+.gnu.hash
+ *(.gnu.hash)
+
+.dynsym         0x00008300      0x340
+ *(.dynsym)
+ .dynsym        0x00008300      0x340 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/crt1.o
+
+.dynstr         0x00008640      0x32b
+ *(.dynstr)
+ .dynstr        0x00008640      0x32b /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/crt1.o
+
+.gnu.version    0x0000896c       0x68
+ *(.gnu.version)
+ .gnu.version   0x0000896c       0x68 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/crt1.o
+
+.gnu.version_d  0x000089d4        0x0
+ *(.gnu.version_d)
+ .gnu.version_d
+                0x00000000        0x0 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/crt1.o
+
+.gnu.version_r  0x000089d4       0x20
+ *(.gnu.version_r)
+ .gnu.version_r
+                0x000089d4       0x20 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/crt1.o
+
+.rel.dyn        0x000089f4        0x8
+ *(.rel.init)
+ *(.rel.text .rel.text.* .rel.gnu.linkonce.t.*)
+ *(.rel.fini)
+ *(.rel.rodata .rel.rodata.* .rel.gnu.linkonce.r.*)
+ *(.rel.data.rel.ro .rel.data.rel.ro.* .rel.gnu.linkonce.d.rel.ro.*)
+ *(.rel.data .rel.data.* .rel.gnu.linkonce.d.*)
+ *(.rel.tdata .rel.tdata.* .rel.gnu.linkonce.td.*)
+ *(.rel.tbss .rel.tbss.* .rel.gnu.linkonce.tb.*)
+ *(.rel.ctors)
+ *(.rel.dtors)
+ *(.rel.got)
+ .rel.got       0x000089f4        0x8 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/crt1.o
+ *(.rel.bss .rel.bss.* .rel.gnu.linkonce.b.*)
+ .rel.bss       0x00000000        0x0 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/crt1.o
+                0x000089fc                PROVIDE (__rel_iplt_start, .)
+ *(.rel.iplt)
+ .rel.iplt      0x00000000        0x0 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/crt1.o
+                0x000089fc                PROVIDE (__rel_iplt_end, .)
+                0x000089fc                PROVIDE (__rela_iplt_start, .)
+                0x000089fc                PROVIDE (__rela_iplt_end, .)
+
+.rela.dyn       0x000089fc        0x0
+ *(.rela.init)
+ *(.rela.text .rela.text.* .rela.gnu.linkonce.t.*)
+ *(.rela.fini)
+ *(.rela.rodata .rela.rodata.* .rela.gnu.linkonce.r.*)
+ *(.rela.data .rela.data.* .rela.gnu.linkonce.d.*)
+ *(.rela.tdata .rela.tdata.* .rela.gnu.linkonce.td.*)
+ *(.rela.tbss .rela.tbss.* .rela.gnu.linkonce.tb.*)
+ *(.rela.ctors)
+ *(.rela.dtors)
+ *(.rela.got)
+ *(.rela.bss .rela.bss.* .rela.gnu.linkonce.b.*)
+                0x000089fc                PROVIDE (__rel_iplt_start, .)
+                0x000089fc                PROVIDE (__rel_iplt_end, .)
+                0x000089fc                PROVIDE (__rela_iplt_start, .)
+ *(.rela.iplt)
+                0x000089fc                PROVIDE (__rela_iplt_end, .)
+
+.rel.plt        0x000089fc      0x138
+ *(.rel.plt)
+ .rel.plt       0x000089fc      0x138 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/crt1.o
+
+.rela.plt
+ *(.rela.plt)
+
+.init           0x00008b34        0xc
+ *(SORT(.init))
+ .init          0x00008b34        0x8 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/crti.o
+                0x00008b34                _init
+ .init          0x00008b3c        0x4 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/crtn.o
+
+.plt            0x00008b40      0x1e8
+ *(.plt)
+ .plt           0x00008b40      0x1e8 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/crt1.o
+                0x00008b54                signal@@GLIBC_2.4
+                0x00008b60                s_window_set_alwaysontop
+                0x00008b6c                s_image_uninit
+                0x00008b78                s_free
+                0x00008b84                s_timer_add
+                0x00008b90                s_font_get_glyph
+                0x00008b9c                s_font_set_rgb
+                0x00008ba8                exit@@GLIBC_2.4
+                0x00008bb4                printf@@GLIBC_2.4
+                0x00008bc0                s_window_new
+                0x00008bcc                puts@@GLIBC_2.4
+                0x00008bd8                s_image_init
+                0x00008be4                s_image_img
+                0x00008bf0                s_font_set_str
+                0x00008bfc                close@@GLIBC_2.4
+                0x00008c08                s_window_set_resizeable
+                0x00008c14                s_font_set_size
+                0x00008c20                s_window_set_cursor
+                0x00008c2c                abort@@GLIBC_2.4
+                0x00008c38                s_font_uninit
+                0x00008c44                s_font_init
+                0x00008c50                s_window_show
+                0x00008c5c                s_window_init
+                0x00008c68                s_window_set_coor
+                0x00008c74                s_putboxrgba
+                0x00008c80                open@@GLIBC_2.4
+                0x00008c8c                s_handler_add
+                0x00008c98                s_timer_init
+                0x00008ca4                s_handler_init
+                0x00008cb0                s_window_main
+                0x00008cbc                malloc@@GLIBC_2.4
+                0x00008cc8                strlen@@GLIBC_2.4
+                0x00008cd4                usleep@@GLIBC_2.4
+                0x00008ce0                write@@GLIBC_2.4
+                0x00008cec                s_rgbcolor
+                0x00008cf8                s_fillbox
+                0x00008d04                __libc_start_main@@GLIBC_2.4
+                0x00008d1c                s_image_get_handler
+
+.iplt           0x00008d28        0x0
+ *(.iplt)
+ .iplt          0x00000000        0x0 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/crt1.o
+
+.text           0x00008d28      0xc2c
+ *(.text.unlikely .text.*_unlikely)
+ *(.text.exit .text.exit.*)
+ *(.text.startup .text.startup.*)
+ *(.text.hot .text.hot.*)
+ *(.text .stub .text.* .gnu.linkonce.t.*)
+ .text          0x00008d28       0x38 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/crt1.o
+                0x00008d28                _start
+ .text          0x00008d60       0x24 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/crti.o
+ .text          0x00008d84       0x94 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../lib/gcc/arm-linux-gnueabihf/4.8.2/crtbegin.o
+ .text          0x00008e18      0xaf8 ./app/appXynthDemo.o
+                0x00008e18                sysfs_gpio_handler
+                0x00008fe0                signal_callback_handler
+                0x0000930c                main
+ .text          0x00009910       0x44 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/libc_nonshared.a(elf-init.oS)
+                0x00009910                __libc_csu_init
+                0x00009950                __libc_csu_fini
+ .text          0x00009954        0x0 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../lib/gcc/arm-linux-gnueabihf/4.8.2/crtend.o
+ .text          0x00009954        0x0 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/crtn.o
+ *(.gnu.warning)
+ *(.glue_7t)
+ .glue_7t       0x00000000        0x0 linker stubs
+ *(.glue_7)
+ .glue_7        0x00000000        0x0 linker stubs
+ *(.vfp11_veneer)
+ .vfp11_veneer  0x00000000        0x0 linker stubs
+ *(.v4_bx)
+ .v4_bx         0x00000000        0x0 linker stubs
+
+.fini           0x00009954        0x8
+ *(SORT(.fini))
+ .fini          0x00009954        0x4 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/crti.o
+                0x00009954                _fini
+ .fini          0x00009958        0x4 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/crtn.o
+                0x0000995c                PROVIDE (__etext, .)
+                0x0000995c                PROVIDE (_etext, .)
+                0x0000995c                PROVIDE (etext, .)
+
+.rodata         0x0000995c      0x1d8
+ *(.rodata .rodata.* .gnu.linkonce.r.*)
+ .rodata.cst4   0x0000995c        0x4 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/crt1.o
+                0x0000995c                _IO_stdin_used
+ .rodata        0x00009960      0x1d4 ./app/appXynthDemo.o
+
+.rodata1
+ *(.rodata1)
+
+.ARM.extab      0x00009b34        0x0
+ *(.ARM.extab* .gnu.linkonce.armextab.*)
+ .ARM.extab     0x00009b34        0x0 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/crt1.o
+                0x00009b34                PROVIDE (__exidx_start, .)
+
+.ARM.exidx      0x00009b34        0x8
+ *(.ARM.exidx* .gnu.linkonce.armexidx.*)
+ .ARM.exidx     0x00009b34        0x8 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/crt1.o
+                0x00009b3c                PROVIDE (__exidx_end, .)
+
+.eh_frame_hdr   0x00009b3c        0x0
+ *(.eh_frame_hdr)
+ .eh_frame_hdr  0x00000000        0x0 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/crtn.o
+
+.eh_frame       0x00009b3c        0x4
+ *(.eh_frame)
+ .eh_frame      0x00009b3c        0x4 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../lib/gcc/arm-linux-gnueabihf/4.8.2/crtend.o
+
+.gcc_except_table
+ *(.gcc_except_table .gcc_except_table.*)
+
+.exception_ranges
+ *(.exception_ranges .exception_ranges*)
+                0x00009b40                . = (ALIGN (0x8000) - ((0x8000 - .) & 0x7fff))
+                0x00011b40                . = DATA_SEGMENT_ALIGN (0x8000, 0x1000)
+
+.eh_frame
+ *(.eh_frame)
+
+.gcc_except_table
+ *(.gcc_except_table .gcc_except_table.*)
+
+.exception_ranges
+ *(.exception_ranges .exception_ranges*)
+
+.tdata
+ *(.tdata .tdata.* .gnu.linkonce.td.*)
+
+.tbss
+ *(.tbss .tbss.* .gnu.linkonce.tb.*)
+ *(.tcommon)
+
+.preinit_array  0x00011b40        0x0
+                0x00011b40                PROVIDE (__preinit_array_start, .)
+ *(.preinit_array)
+                0x00011b40                PROVIDE (__preinit_array_end, .)
+
+.init_array     0x00011b40        0x4
+                0x00011b40                PROVIDE (__init_array_start, .)
+ *(SORT(.init_array.*))
+ *(.init_array)
+ .init_array    0x00011b40        0x4 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../lib/gcc/arm-linux-gnueabihf/4.8.2/crtbegin.o
+                0x00011b44                PROVIDE (__init_array_end, .)
+
+.fini_array     0x00011b44        0x4
+                0x00011b44                PROVIDE (__fini_array_start, .)
+ *(SORT(.fini_array.*))
+ *(.fini_array)
+ .fini_array    0x00011b44        0x4 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../lib/gcc/arm-linux-gnueabihf/4.8.2/crtbegin.o
+                0x00011b48                PROVIDE (__fini_array_end, .)
+
+.ctors
+ *crtbegin.o(.ctors)
+ *crtbegin?.o(.ctors)
+ *(EXCLUDE_FILE(*crtend?.o *crtend.o) .ctors)
+ *(SORT(.ctors.*))
+ *(.ctors)
+
+.dtors
+ *crtbegin.o(.dtors)
+ *crtbegin?.o(.dtors)
+ *(EXCLUDE_FILE(*crtend?.o *crtend.o) .dtors)
+ *(SORT(.dtors.*))
+ *(.dtors)
+
+.jcr            0x00011b48        0x4
+ *(.jcr)
+ .jcr           0x00011b48        0x0 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../lib/gcc/arm-linux-gnueabihf/4.8.2/crtbegin.o
+ .jcr           0x00011b48        0x4 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../lib/gcc/arm-linux-gnueabihf/4.8.2/crtend.o
+
+.data.rel.ro
+ *(.data.rel.ro.local* .gnu.linkonce.d.rel.ro.local.*)
+ *(.data.rel.ro .data.rel.ro.* .gnu.linkonce.d.rel.ro.*)
+
+.dynamic        0x00011b4c      0x140
+ *(.dynamic)
+ .dynamic       0x00011b4c      0x140 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/crt1.o
+                0x00011b4c                _DYNAMIC
+                0x00011c8c                . = DATA_SEGMENT_RELRO_END (., 0x0)
+
+.got            0x00011c8c       0xac
+ *(.got.plt)
+ .got.plt       0x00011c8c       0xa8 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/crt1.o
+                0x00011c8c                _GLOBAL_OFFSET_TABLE_
+ *(.igot.plt)
+ .igot.plt      0x00000000        0x0 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/crt1.o
+ *(.got)
+ .got           0x00011d34        0x4 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/crt1.o
+ *(.igot)
+
+.data           0x00011d38        0x8
+                0x00011d38                PROVIDE (__data_start, .)
+ *(.data .data.* .gnu.linkonce.d.*)
+ .data          0x00011d38        0x4 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/crt1.o
+                0x00011d38                data_start
+                0x00011d38                __data_start
+ .data          0x00011d3c        0x0 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/crti.o
+ .data          0x00011d3c        0x4 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../lib/gcc/arm-linux-gnueabihf/4.8.2/crtbegin.o
+                0x00011d3c                __dso_handle
+ .data          0x00011d40        0x0 ./app/appXynthDemo.o
+ .data          0x00011d40        0x0 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/libc_nonshared.a(elf-init.oS)
+ .data          0x00011d40        0x0 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../lib/gcc/arm-linux-gnueabihf/4.8.2/crtend.o
+ .data          0x00011d40        0x0 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/crtn.o
+
+.tm_clone_table
+                0x00011d40        0x0
+ .tm_clone_table
+                0x00011d40        0x0 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../lib/gcc/arm-linux-gnueabihf/4.8.2/crtbegin.o
+ .tm_clone_table
+                0x00011d40        0x0 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../lib/gcc/arm-linux-gnueabihf/4.8.2/crtend.o
+
+.data1
+ *(.data1)
+                0x00011d40                _edata = .
+                0x00011d40                PROVIDE (edata, .)
+                0x00011d40                . = .
+                0x00011d40                __bss_start = .
+                0x00011d40                __bss_start__ = .
+
+.bss            0x00011d40        0x8
+ *(.dynbss)
+ .dynbss        0x00000000        0x0 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/crt1.o
+ *(.bss .bss.* .gnu.linkonce.b.*)
+ .bss           0x00011d40        0x0 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/crt1.o
+ .bss           0x00011d40        0x0 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/crti.o
+ .bss           0x00011d40        0x1 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../lib/gcc/arm-linux-gnueabihf/4.8.2/crtbegin.o
+ .bss           0x00011d41        0x3 ./app/appXynthDemo.o
+ .bss           0x00011d44        0x0 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/libc_nonshared.a(elf-init.oS)
+ .bss           0x00011d44        0x0 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../lib/gcc/arm-linux-gnueabihf/4.8.2/crtend.o
+ .bss           0x00011d44        0x0 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/crtn.o
+ *(COMMON)
+ COMMON         0x00011d44        0x4 ./app/appXynthDemo.o
+                0x00011d44                gpio_fd
+                0x00011d48                . = ALIGN ((. != 0x0)?0x4:0x1)
+                0x00011d48                _bss_end__ = .
+                0x00011d48                __bss_end__ = .
+                0x00011d48                . = ALIGN (0x4)
+                0x00011d48                . = ALIGN (0x4)
+                0x00011d48                __end__ = .
+                0x00011d48                _end = .
+                0x00011d48                PROVIDE (end, .)
+                0x00011d48                . = DATA_SEGMENT_END (.)
+
+.stab
+ *(.stab)
+
+.stabstr
+ *(.stabstr)
+
+.stab.excl
+ *(.stab.excl)
+
+.stab.exclstr
+ *(.stab.exclstr)
+
+.stab.index
+ *(.stab.index)
+
+.stab.indexstr
+ *(.stab.indexstr)
+
+.comment        0x00000000       0x61
+ *(.comment)
+ .comment       0x00000000       0x61 ./app/appXynthDemo.o
+                                 0x62 (size before relaxing)
+
+.ARM.attributes
+                0x00000000       0x37
+ .ARM.attributes
+                0x00000000       0x35 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/crt1.o
+ .ARM.attributes
+                0x00000035       0x23 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/crti.o
+ .ARM.attributes
+                0x00000058       0x35 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../lib/gcc/arm-linux-gnueabihf/4.8.2/crtbegin.o
+ .ARM.attributes
+                0x0000008d       0x3d ./app/appXynthDemo.o
+ .ARM.attributes
+                0x000000ca       0x37 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/libc_nonshared.a(elf-init.oS)
+ .ARM.attributes
+                0x00000101       0x35 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../lib/gcc/arm-linux-gnueabihf/4.8.2/crtend.o
+ .ARM.attributes
+                0x00000136       0x23 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/crtn.o
+
+.debug
+ *(.debug)
+
+.line
+ *(.line)
+
+.debug_srcinfo
+ *(.debug_srcinfo)
+
+.debug_sfnames
+ *(.debug_sfnames)
+
+.debug_aranges  0x00000000       0x20
+ *(.debug_aranges)
+ .debug_aranges
+                0x00000000       0x20 ./app/appXynthDemo.o
+
+.debug_pubnames
+ *(.debug_pubnames)
+
+.debug_info     0x00000000     0x1996
+ *(.debug_info .gnu.linkonce.wi.*)
+ .debug_info    0x00000000     0x1996 ./app/appXynthDemo.o
+
+.debug_abbrev   0x00000000      0x18b
+ *(.debug_abbrev)
+ .debug_abbrev  0x00000000      0x18b ./app/appXynthDemo.o
+
+.debug_line     0x00000000      0xad6
+ *(.debug_line)
+ .debug_line    0x00000000      0xad6 ./app/appXynthDemo.o
+
+.debug_frame    0x00000000      0x128
+ *(.debug_frame)
+ .debug_frame   0x00000000       0xe4 ./app/appXynthDemo.o
+ .debug_frame   0x000000e4       0x44 /opt/crosstools/gcc-linaro-arm-linux-gnueabihf-4.8-2013.07-1_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/libc_nonshared.a(elf-init.oS)
+
+.debug_str      0x00000000    0x16619
+ *(.debug_str)
+ .debug_str     0x00000000    0x16619 ./app/appXynthDemo.o
+                              0x16873 (size before relaxing)
+
+.debug_loc      0x00000000      0x152
+ *(.debug_loc)
+ .debug_loc     0x00000000      0x152 ./app/appXynthDemo.o
+
+.debug_macinfo
+ *(.debug_macinfo)
+
+.debug_weaknames
+ *(.debug_weaknames)
+
+.debug_funcnames
+ *(.debug_funcnames)
+
+.debug_typenames
+ *(.debug_typenames)
+
+.debug_varnames
+ *(.debug_varnames)
+
+.debug_pubtypes
+ *(.debug_pubtypes)
+
+.debug_ranges
+ *(.debug_ranges)
+
+.debug_macro    0x00000000     0x5d8b
+ *(.debug_macro)
+ .debug_macro   0x00000000      0x614 ./app/appXynthDemo.o
+ .debug_macro   0x00000614      0x868 ./app/appXynthDemo.o
+ .debug_macro   0x00000e7c       0x16 ./app/appXynthDemo.o
+ .debug_macro   0x00000e92       0x10 ./app/appXynthDemo.o
+ .debug_macro   0x00000ea2      0x185 ./app/appXynthDemo.o
+ .debug_macro   0x00001027      0x177 ./app/appXynthDemo.o
+ .debug_macro   0x0000119e       0x35 ./app/appXynthDemo.o
+ .debug_macro   0x000011d3       0x7c ./app/appXynthDemo.o
+ .debug_macro   0x0000124f       0x10 ./app/appXynthDemo.o
+ .debug_macro   0x0000125f       0x97 ./app/appXynthDemo.o
+ .debug_macro   0x000012f6       0x5e ./app/appXynthDemo.o
+ .debug_macro   0x00001354       0xd6 ./app/appXynthDemo.o
+ .debug_macro   0x0000142a       0x2e ./app/appXynthDemo.o
+ .debug_macro   0x00001458       0x16 ./app/appXynthDemo.o
+ .debug_macro   0x0000146e       0x20 ./app/appXynthDemo.o
+ .debug_macro   0x0000148e       0x1e ./app/appXynthDemo.o
+ .debug_macro   0x000014ac       0x28 ./app/appXynthDemo.o
+ .debug_macro   0x000014d4       0x58 ./app/appXynthDemo.o
+ .debug_macro   0x0000152c       0x10 ./app/appXynthDemo.o
+ .debug_macro   0x0000153c      0x1c3 ./app/appXynthDemo.o
+ .debug_macro   0x000016ff       0x4a ./app/appXynthDemo.o
+ .debug_macro   0x00001749       0x28 ./app/appXynthDemo.o
+ .debug_macro   0x00001771       0x27 ./app/appXynthDemo.o
+ .debug_macro   0x00001798       0x16 ./app/appXynthDemo.o
+ .debug_macro   0x000017ae       0x97 ./app/appXynthDemo.o
+ .debug_macro   0x00001845       0x3a ./app/appXynthDemo.o
+ .debug_macro   0x0000187f       0x4c ./app/appXynthDemo.o
+ .debug_macro   0x000018cb       0x1c ./app/appXynthDemo.o
+ .debug_macro   0x000018e7       0x28 ./app/appXynthDemo.o
+ .debug_macro   0x0000190f       0x10 ./app/appXynthDemo.o
+ .debug_macro   0x0000191f       0x10 ./app/appXynthDemo.o
+ .debug_macro   0x0000192f       0x4c ./app/appXynthDemo.o
+ .debug_macro   0x0000197b       0x22 ./app/appXynthDemo.o
+ .debug_macro   0x0000199d       0x62 ./app/appXynthDemo.o
+ .debug_macro   0x000019ff       0x6e ./app/appXynthDemo.o
+ .debug_macro   0x00001a6d       0x3a ./app/appXynthDemo.o
+ .debug_macro   0x00001aa7       0x12 ./app/appXynthDemo.o
+ .debug_macro   0x00001ab9       0x20 ./app/appXynthDemo.o
+ .debug_macro   0x00001ad9       0x1c ./app/appXynthDemo.o
+ .debug_macro   0x00001af5       0x10 ./app/appXynthDemo.o
+ .debug_macro   0x00001b05       0x16 ./app/appXynthDemo.o
+ .debug_macro   0x00001b1b       0x28 ./app/appXynthDemo.o
+ .debug_macro   0x00001b43       0x10 ./app/appXynthDemo.o
+ .debug_macro   0x00001b53       0x4c ./app/appXynthDemo.o
+ .debug_macro   0x00001b9f       0x1c ./app/appXynthDemo.o
+ .debug_macro   0x00001bbb       0x20 ./app/appXynthDemo.o
+ .debug_macro   0x00001bdb       0x4c ./app/appXynthDemo.o
+ .debug_macro   0x00001c27       0x10 ./app/appXynthDemo.o
+ .debug_macro   0x00001c37       0x10 ./app/appXynthDemo.o
+ .debug_macro   0x00001c47       0x6a ./app/appXynthDemo.o
+ .debug_macro   0x00001cb1      0x190 ./app/appXynthDemo.o
+ .debug_macro   0x00001e41       0x52 ./app/appXynthDemo.o
+ .debug_macro   0x00001e93       0x27 ./app/appXynthDemo.o
+ .debug_macro   0x00001eba       0x4a ./app/appXynthDemo.o
+ .debug_macro   0x00001f04      0x824 ./app/appXynthDemo.o
+ .debug_macro   0x00002728       0x20 ./app/appXynthDemo.o
+ .debug_macro   0x00002748       0x1c ./app/appXynthDemo.o
+ .debug_macro   0x00002764      0x1b7 ./app/appXynthDemo.o
+ .debug_macro   0x0000291b       0x22 ./app/appXynthDemo.o
+ .debug_macro   0x0000293d       0xe6 ./app/appXynthDemo.o
+ .debug_macro   0x00002a23       0xc5 ./app/appXynthDemo.o
+ .debug_macro   0x00002ae8       0x16 ./app/appXynthDemo.o
+ .debug_macro   0x00002afe       0x58 ./app/appXynthDemo.o
+ .debug_macro   0x00002b56       0x28 ./app/appXynthDemo.o
+ .debug_macro   0x00002b7e       0x16 ./app/appXynthDemo.o
+ .debug_macro   0x00002b94      0x106 ./app/appXynthDemo.o
+ .debug_macro   0x00002c9a      0x1fd ./app/appXynthDemo.o
+ .debug_macro   0x00002e97       0x12 ./app/appXynthDemo.o
+ .debug_macro   0x00002ea9       0x64 ./app/appXynthDemo.o
+ .debug_macro   0x00002f0d       0x20 ./app/appXynthDemo.o
+ .debug_macro   0x00002f2d       0x19 ./app/appXynthDemo.o
+ .debug_macro   0x00002f46       0x1c ./app/appXynthDemo.o
+ .debug_macro   0x00002f62       0x6a ./app/appXynthDemo.o
+ .debug_macro   0x00002fcc       0x16 ./app/appXynthDemo.o
+ .debug_macro   0x00002fe2       0x22 ./app/appXynthDemo.o
+ .debug_macro   0x00003004       0x16 ./app/appXynthDemo.o
+ .debug_macro   0x0000301a       0xd6 ./app/appXynthDemo.o
+ .debug_macro   0x000030f0      0x256 ./app/appXynthDemo.o
+ .debug_macro   0x00003346       0x10 ./app/appXynthDemo.o
+ .debug_macro   0x00003356       0x16 ./app/appXynthDemo.o
+ .debug_macro   0x0000336c       0x39 ./app/appXynthDemo.o
+ .debug_macro   0x000033a5       0x10 ./app/appXynthDemo.o
+ .debug_macro   0x000033b5       0xd0 ./app/appXynthDemo.o
+ .debug_macro   0x00003485      0x1de ./app/appXynthDemo.o
+ .debug_macro   0x00003663      0x148 ./app/appXynthDemo.o
+ .debug_macro   0x000037ab       0xac ./app/appXynthDemo.o
+ .debug_macro   0x00003857       0xac ./app/appXynthDemo.o
+ .debug_macro   0x00003903       0x10 ./app/appXynthDemo.o
+ .debug_macro   0x00003913       0x16 ./app/appXynthDemo.o
+ .debug_macro   0x00003929       0x40 ./app/appXynthDemo.o
+ .debug_macro   0x00003969       0x22 ./app/appXynthDemo.o
+ .debug_macro   0x0000398b     0x132b ./app/appXynthDemo.o
+ .debug_macro   0x00004cb6       0x16 ./app/appXynthDemo.o
+ .debug_macro   0x00004ccc      0x11b ./app/appXynthDemo.o
+ .debug_macro   0x00004de7       0x4c ./app/appXynthDemo.o
+ .debug_macro   0x00004e33      0x171 ./app/appXynthDemo.o
+ .debug_macro   0x00004fa4      0x1a8 ./app/appXynthDemo.o
+ .debug_macro   0x0000514c       0x88 ./app/appXynthDemo.o
+ .debug_macro   0x000051d4       0x40 ./app/appXynthDemo.o
+ .debug_macro   0x00005214       0x10 ./app/appXynthDemo.o
+ .debug_macro   0x00005224       0x10 ./app/appXynthDemo.o
+ .debug_macro   0x00005234       0x3a ./app/appXynthDemo.o
+ .debug_macro   0x0000526e      0x234 ./app/appXynthDemo.o
+ .debug_macro   0x000054a2       0x16 ./app/appXynthDemo.o
+ .debug_macro   0x000054b8       0xcf ./app/appXynthDemo.o
+ .debug_macro   0x00005587       0x34 ./app/appXynthDemo.o
+ .debug_macro   0x000055bb      0x106 ./app/appXynthDemo.o
+ .debug_macro   0x000056c1       0x22 ./app/appXynthDemo.o
+ .debug_macro   0x000056e3       0x10 ./app/appXynthDemo.o
+ .debug_macro   0x000056f3       0x16 ./app/appXynthDemo.o
+ .debug_macro   0x00005709      0x1c3 ./app/appXynthDemo.o
+ .debug_macro   0x000058cc      0x1ae ./app/appXynthDemo.o
+ .debug_macro   0x00005a7a      0x2b2 ./app/appXynthDemo.o
+ .debug_macro   0x00005d2c       0x5f ./app/appXynthDemo.o
+
+.gnu.attributes
+ *(.gnu.attributes)
+
+.note.gnu.arm.ident
+ *(.note.gnu.arm.ident)
+
+/DISCARD/
+ *(.note.GNU-stack)
+ *(.gnu_debuglink)
+ *(.gnu.lto_*)
+OUTPUT(xynthLeds elf32-littlearm)
