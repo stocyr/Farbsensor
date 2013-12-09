@@ -69,7 +69,7 @@ INT16 i2c_set_address(UINT8 i2cAddress) {
 INT16 i2c_write(UINT8 *i2cBuffer, UINT16 i2cLen) {
 	/* Write to the i2c device */
 	if (write(i2c_fd, i2cBuffer, i2cLen) != i2cLen) {
-		perror("write error!");
+		perror("i2c write error! ");
 		return -1;
 	}
 	return 0;
@@ -81,8 +81,8 @@ INT16 i2c_write(UINT8 *i2cBuffer, UINT16 i2cLen) {
 
 INT16 i2c_read(UINT8 *i2cBuffer, UINT16 i2cLen) {
 	/* Read from the i2c device */
-	if (read(i2c_fd, i2cCommBuffer, i2cLen) != i2cLen) {
-		perror("read error");
+	if (read(i2c_fd, i2cBuffer, i2cLen) != i2cLen) {
+		perror("i2c read error! ");
 		return -1;
 	}
 	return 0;
@@ -93,11 +93,11 @@ INT16 i2c_read(UINT8 *i2cBuffer, UINT16 i2cLen) {
 /************************************************************************/
 INT16 TCS3414_Init(void) {
 	/* Setup i2c buffer for the control register */
-	i2cCommBuffer[0] = TCS3414_BYTE_WISE & TCS3414_CONTROL;
+	i2cCommBuffer[0] = TCS3414_BYTE_WISE | TCS3414_CONTROL;
 
 	/* Write buffer data to i2c device */
 	if (i2c_write(i2cCommBuffer, 1) < 0) {
-		perror("write error");
+		perror("init write error");
 		return -1;
 	}
 
@@ -106,9 +106,14 @@ INT16 TCS3414_Init(void) {
 
 	/* Write buffer data to i2c device */
 	if (i2c_write(i2cCommBuffer, 1) < 0) {
-		perror("write error");
+		perror("init write error");
 		return -1;
 	}
+
+	i2c_read(i2cCommBuffer, 1);
+
+	printf("\nReceived after sending POWER_ON: %d (should be 3)\n\n", i2cCommBuffer[0]);
+
 	return 0;
 }
 
@@ -121,16 +126,48 @@ INT16 TCS3414_Init(void) {
 
 void TCS3414_ReadColors(UINT16* green, UINT16* red, UINT16* blue, UINT16* clear) {
 	/* Setup TCS3414 register to read all 4 colors as a block */
-	i2cCommBuffer[0] = TCS3414_BLOCK_WISE & TCS3414_DATABLOCK;
+	i2cCommBuffer[0] = TCS3414_BLOCK_WISE | TCS3414_DATABLOCK;
+	i2cCommBuffer[1] = 0x08;	// page 10 of datasheet:
+	/*
+When an SMBus Block Write or Block Read is initiated (see description of COMMAND Register), the byte
+following the COMMAND byte is ignored but is a requirement of the SMBus specification. This field contains
+the byte count (i.e. the number of bytes to be transferred).
+	 */
 
 	/* Write data to i2c device */
-	i2c_write(i2cCommBuffer, 1);
+	i2c_write(i2cCommBuffer, 2);
 
 	/* Read the color value block (8 bytes) from the device */
 	i2c_read(i2cCommBuffer, 8);
+
+
 
 	*green = i2cCommBuffer[0] | (i2cCommBuffer[1] << 8);
 	*red   = i2cCommBuffer[2] | (i2cCommBuffer[3] << 8);
 	*blue  = i2cCommBuffer[4] | (i2cCommBuffer[5] << 8);
 	*clear = i2cCommBuffer[6] | (i2cCommBuffer[7] << 8);
+}
+
+void TCS3414_ReadColor(UINT16* value) {
+	/* Setup TCS3414 register to read "clear" LOW*/
+	i2cCommBuffer[0] = TCS3414_BYTE_WISE | TCS3414_DATA4LOW;
+
+	/* Write data to i2c device */
+	i2c_write(i2cCommBuffer, 1);
+
+	/* Read the color value block (8 bytes) from the device */
+	i2c_read(i2cCommBuffer, 1);
+
+	*value = i2cCommBuffer[0];
+
+	/* Setup TCS3414 register to read "clear" HIGH*/
+	i2cCommBuffer[0] = TCS3414_BYTE_WISE | TCS3414_DATA4HIGH;
+
+	/* Write data to i2c device */
+	i2c_write(i2cCommBuffer, 1);
+
+	/* Read the color value block (8 bytes) from the device */
+	i2c_read(i2cCommBuffer, 1);
+
+	*value |= i2cCommBuffer[0] << 8;
 }

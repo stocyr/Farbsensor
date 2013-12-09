@@ -29,6 +29,7 @@
 
 #include <stdbool.h>
 #include <errno.h>
+#include <signal.h>
 
 #include "TCS3414.h"
 
@@ -92,6 +93,24 @@ INT16 x, y;
 UINT32 fbfd;
 UINT32 screensize;
 
+/* Function prototype */
+void signal_callback_handler(int signum);
+
+/*
+ ***************************************************************************
+ * Define the function to be called when ctrl-c (SIGINT)
+ * signal is sent to process
+ ***************************************************************************
+ */
+
+void signal_callback_handler(int signum) {
+	printf("\nExit via Ctrl-C\n");
+	i2c_close();
+
+	/* Terminate program */
+	exit(signum);
+}
+
 /*
  ******************************************************************************
  * main
@@ -100,8 +119,10 @@ UINT32 screensize;
 int main(int argc, char *argv[]) {
 	INT32 fbfd = 0;
 	INT32 screensize = 0;
-
 	UINT16 green, red, blue, clear;
+
+	/* Register signal and signal handler */
+	signal(SIGINT, signal_callback_handler);
 
 	// Open the Linux i2c device
 	i2c_open();
@@ -112,11 +133,12 @@ int main(int argc, char *argv[]) {
 	// Configure the TCS3414 color sensor
 	TCS3414_Init();
 
-	while(1)
-	{
+	while (1) {
 		TCS3414_ReadColors(&green, &red, &blue, &clear);
 		printf("Red: %5d Green: %5d Blue: %5d Clear: %5d\n", red, green, blue, clear);
-		sleep(1);
+		//TCS3414_ReadColor(&clear);
+		//printf("brightness: %d\n", clear);
+		usleep(1000000);
 	}
 
 	/*

@@ -40,7 +40,7 @@
 #define TCS3414_DATA3LOW	0x14	/* Blue low Register */
 #define TCS3414_DATA3HIGH	0x15	/* Blue high Register */
 #define TCS3414_DATA4LOW	0x16	/* Clear low Register */
-#define TCS3414_DATA5HIGH	0x17	/* Clear high Register */
+#define TCS3414_DATA4HIGH	0x17	/* Clear high Register */
 
 /* i2c Address of TCS3414 device */
 #define TCS3414_I2C_ADDR 	0x39
@@ -84,6 +84,7 @@ extern INT16 i2c_read(UINT8 *i2cBuffer, UINT16 i2cLen);
 extern INT16 TCS3414_Init(void);
 extern void TCS3414_ReadColors(UINT16* green, UINT16* red, UINT16* blue,
 		UINT16* clear);
+extern void TCS3414_ReadColor(UINT16* value);
 
 #endif
 
