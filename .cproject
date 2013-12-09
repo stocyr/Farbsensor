@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?fileVersion 4.0.0?>
+
+<cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
+	<storageModule moduleId="org.eclipse.cdt.core.settings">
+		<cconfiguration id="org.bfh.cdt.cross.arm.toolchain.linux.elf.debug.472071766">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="org.bfh.cdt.cross.arm.toolchain.linux.elf.debug.472071766" moduleId="org.eclipse.cdt.core.settings" name="Debug">
+				<externalSettings/>
+				<extensions>
+					<extension id="org.eclipse.cdt.core.GNU_ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.MakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+				</extensions>
+			</storageModule>
+			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+				<configuration artifactName="${ProjName}" buildArtefactType="org.bfh.cdt.cross.arm.toolchain.buildArtefactType.application" buildProperties="org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug,org.eclipse.cdt.build.core.buildArtefactType=org.bfh.cdt.cross.arm.toolchain.buildArtefactType.application" description="" id="org.bfh.cdt.cross.arm.toolchain.linux.elf.debug.472071766" name="Debug" parent="org.bfh.cdt.cross.arm.toolchain.linux.elf.debug" postbuildStep="cp Farbsensor /opt/embedded/sitara/rootfs/usr/local/bin/Farbsensor">
+					<folderInfo id="org.bfh.cdt.cross.arm.toolchain.linux.elf.debug.472071766." name="/" resourcePath="">
+						<toolChain id="org.bfh.cdt.cross.arm.toolchain.linux.elf.toolchain.debug.658516365" name="ARM Linux GCC (GNUARM)" superClass="org.bfh.cdt.cross.arm.toolchain.linux.elf.toolchain.debug">
+							<option id="org.bfh.cdt.cross.arm.toolchain.linux.option.debugging.level.243531281" name="Debug level" superClass="org.bfh.cdt.cross.arm.toolchain.linux.option.debugging.level" value="org.bfh.cdt.cross.arm.toolchain.base.option.debugging.level.max" valueType="enumerated"/>
+							<targetPlatform id="org.bfh.cdt.cross.arm.toolchain.linux.elf.platform.debug.2025900702" isAbstract="false" name="Linux Platform" superClass="org.bfh.cdt.cross.arm.toolchain.linux.elf.platform.debug"/>
+							<builder buildPath="${workspace_loc:/Farbsensor}/Debug" id="org.bfh.cdt.cross.arm.toolchain.linux.elf.builder.debug.1581098987" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="ARM Linux GNU Make builder" superClass="org.bfh.cdt.cross.arm.toolchain.linux.elf.builder.debug"/>
+							<tool id="org.bfh.cdt.cross.arm.toolchain.linux.elf.assembler.debug.64544585" name="ARM Linux GCC Assembler" superClass="org.bfh.cdt.cross.arm.toolchain.linux.elf.assembler.debug">
+								<inputType id="org.bfh.cdt.cross.arm.toolchain.linux.assembler.base.input.532305557" superClass="org.bfh.cdt.cross.arm.toolchain.linux.assembler.base.input"/>
+							</tool>
+							<tool id="org.bfh.cdt.cross.arm.toolchain.linux.elf.c.compiler.debug.786571894" name="ARM Linux GCC C Compiler" superClass="org.bfh.cdt.cross.arm.toolchain.linux.elf.c.compiler.debug">
+								<option id="org.bfh.cdt.cross.arm.toolchain.c.compiler.option.optimization.level.466772060" name="Optimization level" superClass="org.bfh.cdt.cross.arm.toolchain.c.compiler.option.optimization.level" value="org.bfh.cdt.cross.arm.toolchain.base.option.optimization.level.none" valueType="enumerated"/>
+								<option id="org.bfh.cdt.cross.arm.toolchain.c.compiler.option.include.paths.151905531" name="Include paths (-I)" superClass="org.bfh.cdt.cross.arm.toolchain.c.compiler.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="${workspace_loc:/${ProjName}/include}"/>
+									<listOptionValue builtIn="false" value=""/>
+									<listOptionValue builtIn="false" value="/opt/embedded/sitara/rootfs/usr/include"/>
+									<listOptionValue builtIn="false" value="/opt/embedded/sitara/rootfs/usr/local/include"/>
+								</option>
+								<inputType id="org.bfh.cdt.cross.arm.toolchain.linux.c.compiler.base.input.1157150502" superClass="org.bfh.cdt.cross.arm.toolchain.linux.c.compiler.base.input"/>
+							</tool>
+							<tool id="org.bfh.cdt.cross.arm.toolchain.linux.elf.cpp.compiler.debug.835495845" name="ARM Linux GCC C++ Compiler" superClass="org.bfh.cdt.cross.arm.toolchain.linux.elf.cpp.compiler.debug">
+								<option id="org.bfh.cdt.cross.arm.toolchain.cpp.compiler.option.optimization.level.1053474116" name="Optimization level" superClass="org.bfh.cdt.cross.arm.toolchain.cpp.compiler.option.optimization.level" value="org.bfh.cdt.cross.arm.toolchain.base.option.optimization.level.none" valueType="enumerated"/>
+							</tool>
+							<tool id="org.bfh.cdt.cross.arm.toolchain.linux.elf.c.linker.debug.102205764" name="ARM Linux GCC C Linker" superClass="org.bfh.cdt.cross.arm.toolchain.linux.elf.c.linker.debug">
+								<option id="org.bfh.cdt.cross.arm.toolchain.c.link.option.libs.2141626742" name="Libraries (-l)" superClass="org.bfh.cdt.cross.arm.toolchain.c.link.option.libs" valueType="libs">
+									<listOptionValue builtIn="false" value="stdc++"/>
+									<listOptionValue builtIn="false" value="xynth"/>
+									<listOptionValue builtIn="false" value="widget"/>
+									<listOptionValue builtIn="false" value="widgetoo"/>
+									<listOptionValue builtIn="false" value="SDL"/>
+									<listOptionValue builtIn="false" value="direct"/>
+									<listOptionValue builtIn="false" value="directfb"/>
+									<listOptionValue builtIn="false" value="fusion"/>
+									<listOptionValue builtIn="false" value="ts"/>
+									<listOptionValue builtIn="false" value="z"/>
+									<listOptionValue builtIn="false" value="m"/>
+								</option>
+								<option id="org.bfh.cdt.cross.arm.toolchain.c.link.option.paths.487861585" name="Library search path (-L)" superClass="org.bfh.cdt.cross.arm.toolchain.c.link.option.paths" valueType="libPaths">
+									<listOptionValue builtIn="false" value=""/>
+									<listOptionValue builtIn="false" value="/opt/embedded/sitara/rootfs/usr/lib"/>
+									<listOptionValue builtIn="false" value="/opt/embedded/sitara/rootfs/usr/local/lib"/>
+								</option>
+								<inputType id="org.bfh.cdt.cross.arm.toolchain.c.linker.input.1270177152" superClass="org.bfh.cdt.cross.arm.toolchain.c.linker.input">
+									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
+									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
+								</inputType>
+							</tool>
+							<tool id="org.bfh.cdt.cross.arm.toolchain.linux.elf.cpp.linker.debug.95411850" name="ARM Linux GCC C++ Linker" superClass="org.bfh.cdt.cross.arm.toolchain.linux.elf.cpp.linker.debug"/>
+							<tool id="org.bfh.cdt.cross.arm.toolchain.linux.archiver.base.2015015917" name="ARM Linux GCC Archiver" superClass="org.bfh.cdt.cross.arm.toolchain.linux.archiver.base"/>
+							<tool id="org.bfh.cdt.cross.arm.toolchain.linux.elf.createlisting.debug.980412495" name="ARM Linux GNU Create Listing" superClass="org.bfh.cdt.cross.arm.toolchain.linux.elf.createlisting.debug"/>
+							<tool id="org.bfh.cdt.cross.arm.toolchain.linux.elf.printsize.debug.1070749302" name="ARM Linux GNU Print Size" superClass="org.bfh.cdt.cross.arm.toolchain.linux.elf.printsize.debug"/>
+						</toolChain>
+					</folderInfo>
+					<sourceEntries>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="app"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="include"/>
+					</sourceEntries>
+				</configuration>
+			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+		</cconfiguration>
+		<cconfiguration id="org.bfh.cdt.cross.arm.toolchain.linux.elf.release.2078249097">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="org.bfh.cdt.cross.arm.toolchain.linux.elf.release.2078249097" moduleId="org.eclipse.cdt.core.settings" name="Release">
+				<externalSettings/>
+				<extensions>
+					<extension id="org.eclipse.cdt.core.GNU_ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.MakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+				</extensions>
+			</storageModule>
+			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+				<configuration artifactName="${ProjName}" buildArtefactType="org.bfh.cdt.cross.arm.toolchain.buildArtefactType.application" buildProperties="org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.release,org.eclipse.cdt.build.core.buildArtefactType=org.bfh.cdt.cross.arm.toolchain.buildArtefactType.application" description="" id="org.bfh.cdt.cross.arm.toolchain.linux.elf.release.2078249097" name="Release" parent="org.bfh.cdt.cross.arm.toolchain.linux.elf.release">
+					<folderInfo id="org.bfh.cdt.cross.arm.toolchain.linux.elf.release.2078249097." name="/" resourcePath="">
+						<toolChain id="org.bfh.cdt.cross.arm.toolchain.linux.elf.toolchain.release.41330148" name="ARM Linux GCC (GNUARM)" superClass="org.bfh.cdt.cross.arm.toolchain.linux.elf.toolchain.release">
+							<option id="org.bfh.cdt.cross.arm.toolchain.linux.option.debugging.level.992179195" name="Debug level" superClass="org.bfh.cdt.cross.arm.toolchain.linux.option.debugging.level" value="org.bfh.cdt.cross.arm.toolchain.base.option.debugging.level.none" valueType="enumerated"/>
+							<targetPlatform id="org.bfh.cdt.cross.arm.toolchain.linux.elf.platform.release.933596438" isAbstract="false" name="Linux Platform" superClass="org.bfh.cdt.cross.arm.toolchain.linux.elf.platform.release"/>
+							<builder buildPath="${workspace_loc:/Farbsensor}/Release" id="org.bfh.cdt.cross.arm.toolchain.linux.elf.builder.release.65688875" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="ARM Linux GNU Make builder" superClass="org.bfh.cdt.cross.arm.toolchain.linux.elf.builder.release"/>
+							<tool id="org.bfh.cdt.cross.arm.toolchain.linux.elf.assembler.release.147359942" name="ARM Linux GCC Assembler" superClass="org.bfh.cdt.cross.arm.toolchain.linux.elf.assembler.release">
+								<inputType id="org.bfh.cdt.cross.arm.toolchain.linux.assembler.base.input.2053052066" superClass="org.bfh.cdt.cross.arm.toolchain.linux.assembler.base.input"/>
+							</tool>
+							<tool id="org.bfh.cdt.cross.arm.toolchain.linux.elf.c.compiler.release.1659256895" name="ARM Linux GCC C Compiler" superClass="org.bfh.cdt.cross.arm.toolchain.linux.elf.c.compiler.release">
+								<option id="org.bfh.cdt.cross.arm.toolchain.c.compiler.option.optimization.level.767434203" name="Optimization level" superClass="org.bfh.cdt.cross.arm.toolchain.c.compiler.option.optimization.level" value="org.bfh.cdt.cross.arm.toolchain.base.option.optimization.level.size" valueType="enumerated"/>
+								<option id="org.bfh.cdt.cross.arm.toolchain.c.compiler.option.include.paths.313546526" name="Include paths (-I)" superClass="org.bfh.cdt.cross.arm.toolchain.c.compiler.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="${workspace_loc:/${ProjName}/include}"/>
+									<listOptionValue builtIn="false" value=""/>
+									<listOptionValue builtIn="false" value="/opt/embedded/sitara/rootfs/usr/include"/>
+									<listOptionValue builtIn="false" value="/opt/embedded/sitara/rootfs/usr/local/include"/>
+								</option>
+								<inputType id="org.bfh.cdt.cross.arm.toolchain.linux.c.compiler.base.input.572219937" superClass="org.bfh.cdt.cross.arm.toolchain.linux.c.compiler.base.input"/>
+							</tool>
+							<tool id="org.bfh.cdt.cross.arm.toolchain.linux.elf.cpp.compiler.release.1082160635" name="ARM Linux GCC C++ Compiler" superClass="org.bfh.cdt.cross.arm.toolchain.linux.elf.cpp.compiler.release">
+								<option id="org.bfh.cdt.cross.arm.toolchain.cpp.compiler.option.optimization.level.1322097863" name="Optimization level" superClass="org.bfh.cdt.cross.arm.toolchain.cpp.compiler.option.optimization.level" value="org.bfh.cdt.cross.arm.toolchain.base.option.optimization.level.size" valueType="enumerated"/>
+							</tool>
+							<tool id="org.bfh.cdt.cross.arm.toolchain.linux.elf.c.linker.release.353945309" name="ARM Linux GCC C Linker" superClass="org.bfh.cdt.cross.arm.toolchain.linux.elf.c.linker.release">
+								<option id="org.bfh.cdt.cross.arm.toolchain.c.link.option.libs.1628006861" name="Libraries (-l)" superClass="org.bfh.cdt.cross.arm.toolchain.c.link.option.libs" valueType="libs">
+									<listOptionValue builtIn="false" value="stdc++"/>
+									<listOptionValue builtIn="false" value="xynth"/>
+									<listOptionValue builtIn="false" value="widget"/>
+									<listOptionValue builtIn="false" value="widgetoo"/>
+									<listOptionValue builtIn="false" value="SDL"/>
+									<listOptionValue builtIn="false" value="direct"/>
+									<listOptionValue builtIn="false" value="directfb"/>
+									<listOptionValue builtIn="false" value="fusion"/>
+									<listOptionValue builtIn="false" value="ts"/>
+									<listOptionValue builtIn="false" value="z"/>
+									<listOptionValue builtIn="false" value="m"/>
+								</option>
+								<option id="org.bfh.cdt.cross.arm.toolchain.c.link.option.paths.517660497" name="Library search path (-L)" superClass="org.bfh.cdt.cross.arm.toolchain.c.link.option.paths" valueType="libPaths">
+									<listOptionValue builtIn="false" value=""/>
+									<listOptionValue builtIn="false" value="/opt/embedded/sitara/rootfs/usr/lib"/>
+									<listOptionValue builtIn="false" value="/opt/embedded/sitara/rootfs/usr/local/lib"/>
+								</option>
+								<inputType id="org.bfh.cdt.cross.arm.toolchain.c.linker.input.2046189266" superClass="org.bfh.cdt.cross.arm.toolchain.c.linker.input">
+									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
+									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
+								</inputType>
+							</tool>
+							<tool id="org.bfh.cdt.cross.arm.toolchain.linux.elf.cpp.linker.release.1649949572" name="ARM Linux GCC C++ Linker" superClass="org.bfh.cdt.cross.arm.toolchain.linux.elf.cpp.linker.release"/>
+							<tool id="org.bfh.cdt.cross.arm.toolchain.linux.archiver.base.64377459" name="ARM Linux GCC Archiver" superClass="org.bfh.cdt.cross.arm.toolchain.linux.archiver.base"/>
+							<tool id="org.bfh.cdt.cross.arm.toolchain.linux.elf.createlisting.release.1382437572" name="ARM Linux GNU Create Listing" superClass="org.bfh.cdt.cross.arm.toolchain.linux.elf.createlisting.release"/>
+							<tool id="org.bfh.cdt.cross.arm.toolchain.linux.elf.printsize.release.1760397105" name="ARM Linux GNU Print Size" superClass="org.bfh.cdt.cross.arm.toolchain.linux.elf.printsize.release"/>
+						</toolChain>
+					</folderInfo>
+					<sourceEntries>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="app"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="include"/>
+					</sourceEntries>
+				</configuration>
+			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+		</cconfiguration>
+	</storageModule>
+	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+		<project id="Farbsensor.org.bfh.cdt.cross.arm.toolchain.linux.elf.189509151" name="ARM Cross Target Application" projectType="org.bfh.cdt.cross.arm.toolchain.linux.elf"/>
+	</storageModule>
+	<storageModule moduleId="scannerConfiguration">
+		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		<scannerConfigBuildInfo instanceId="org.bfh.cdt.cross.arm.toolchain.linux.elf.debug.472071766;org.bfh.cdt.cross.arm.toolchain.linux.elf.debug.472071766.;org.bfh.cdt.cross.arm.toolchain.linux.elf.assembler.debug.64544585;org.bfh.cdt.cross.arm.toolchain.linux.assembler.base.input.532305557">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.bfh.cdt.cross.arm.toolchain.ARM_GCCManagedMakePerProjectProfileC"/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="org.bfh.cdt.cross.arm.toolchain.linux.elf.release.2078249097;org.bfh.cdt.cross.arm.toolchain.linux.elf.release.2078249097.;org.bfh.cdt.cross.arm.toolchain.linux.elf.c.compiler.release.1659256895;org.bfh.cdt.cross.arm.toolchain.linux.c.compiler.base.input.572219937">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.bfh.cdt.cross.arm.toolchain.ARM_GCCManagedMakePerProjectProfileC"/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="org.bfh.cdt.cross.arm.toolchain.linux.elf.debug.472071766;org.bfh.cdt.cross.arm.toolchain.linux.elf.debug.472071766.;org.bfh.cdt.cross.arm.toolchain.linux.elf.c.compiler.debug.786571894;org.bfh.cdt.cross.arm.toolchain.linux.c.compiler.base.input.1157150502">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.bfh.cdt.cross.arm.toolchain.ARM_GCCManagedMakePerProjectProfileC"/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="org.bfh.cdt.cross.arm.toolchain.linux.elf.release.2078249097;org.bfh.cdt.cross.arm.toolchain.linux.elf.release.2078249097.;org.bfh.cdt.cross.arm.toolchain.linux.elf.assembler.release.147359942;org.bfh.cdt.cross.arm.toolchain.linux.assembler.base.input.2053052066">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.bfh.cdt.cross.arm.toolchain.ARM_GCCManagedMakePerProjectProfileC"/>
+		</scannerConfigBuildInfo>
+	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
+	<storageModule moduleId="refreshScope"/>
+</cproject>

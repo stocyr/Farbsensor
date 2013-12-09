@@ -5,16 +5,17 @@ Projektarbeit:
   - sensor initialiseren
   - sensor auslesen, ausgeben
 - Farbe darstellen
-  - C programm unformatiert
+  - bash script - einfach und unformatiert
   - C programm formatiert
-  - Farbe imitieren, evtl. RBG Farbmischung darstellen
+  - Farbe imitieren
 
 
 Ablauf:
+- Bash
+  - i2c
+  - sensor initialisieren
+  - sensor auslesen
 - C Programm (mit xynth vorlage)
-  - Datenblatt des Chips durchlesen, Control Register kennenlernen
   - Temperatursensor-code einbinden (mit den schön modularen funktionen zum initialisieren, auslesen und schreiben)
-  - zuerst printf darstellung der unformatierten Werte
-  - dann printf darstellung von richtigen Daten, ebenfalls helligkeit ("clear")
-  - gain-einstellung richtig einstellen, evtl. mit Poti!!
+  - zuerst printf darstellung
   - dann xynth window initialisieren und farbe darstellen
