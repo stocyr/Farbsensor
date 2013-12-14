@@ -197,6 +197,8 @@ int main(int argc, char *argv[]) {
 	// Configure the TCS3414 color sensor
 	TCS3414_Init();
 
+	sleep(2);
+
 	while (1) {
 		//TCS3414_ReadColors(&green, &red, &blue, &clear);
 		TCS3414_ReadColor(GREEN, &green);
