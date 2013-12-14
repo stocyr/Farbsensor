@@ -52,6 +52,8 @@
 #define TCS3414_BYTE_WISE	0x80
 #define TCS3414_BLOCK_WISE	0xC0
 
+typedef enum {GREEN, RED, BLUE, CLEAR} Color;
+
 /*
  ***************************************************************************
  * Define some data types
@@ -84,7 +86,7 @@ extern INT16 i2c_read(UINT8 *i2cBuffer, UINT16 i2cLen);
 extern INT16 TCS3414_Init(void);
 extern void TCS3414_ReadColors(UINT16* green, UINT16* red, UINT16* blue,
 		UINT16* clear);
-extern void TCS3414_ReadColor(UINT16* value);
+extern void TCS3414_ReadColor(Color color, UINT16* value);
 
 #endif
 

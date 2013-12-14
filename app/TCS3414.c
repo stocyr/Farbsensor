@@ -148,9 +148,12 @@ the byte count (i.e. the number of bytes to be transferred).
 	*clear = i2cCommBuffer[6] | (i2cCommBuffer[7] << 8);
 }
 
-void TCS3414_ReadColor(UINT16* value) {
+void TCS3414_ReadColor(Color color, UINT16* value) {
+	UINT8 addressPointer = (UINT8)color*2 + 0x10;
+
+
 	/* Setup TCS3414 register to read "clear" LOW*/
-	i2cCommBuffer[0] = TCS3414_BYTE_WISE | TCS3414_DATA4LOW;
+	i2cCommBuffer[0] = TCS3414_BYTE_WISE | addressPointer;
 
 	/* Write data to i2c device */
 	i2c_write(i2cCommBuffer, 1);
@@ -161,7 +164,7 @@ void TCS3414_ReadColor(UINT16* value) {
 	*value = i2cCommBuffer[0];
 
 	/* Setup TCS3414 register to read "clear" HIGH*/
-	i2cCommBuffer[0] = TCS3414_BYTE_WISE | TCS3414_DATA4HIGH;
+	i2cCommBuffer[0] = TCS3414_BYTE_WISE | (addressPointer + 0x01);
 
 	/* Write data to i2c device */
 	i2c_write(i2cCommBuffer, 1);

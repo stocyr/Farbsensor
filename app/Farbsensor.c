@@ -31,6 +31,8 @@
 #include <errno.h>
 #include <signal.h>
 
+#include <ncurses.h>
+
 #include "TCS3414.h"
 
 /*
@@ -104,11 +106,73 @@ void signal_callback_handler(int signum);
  */
 
 void signal_callback_handler(int signum) {
+	printf("%c[2J", 27);	// clear entire screen
+	printf("%c[f", 27);		// move cursor to upper left of screen ("home")
 	printf("\nExit via Ctrl-C\n");
 	i2c_close();
 
 	/* Terminate program */
 	exit(signum);
+}
+
+/*
+ *
+ * Print RGB Values astethically
+ *
+ */
+
+void print_rgb(UINT16 red, UINT16 green, UINT16 blue, UINT16 clear) {
+	static int max = 1;
+	int i;
+
+	if (red > max)
+		max = red;
+	if (green > max)
+		max = green;
+	if (blue > max)
+		max = blue;
+	if (clear > max)
+		max = clear;
+
+	printf("%c[2J", 27);	// clear entire screen
+	printf("%c[f", 27);		// move cursor to upper left of screen ("home")
+
+	printf("%c[1m", 27);	// bold on
+	printf("Color values from sensor TCS3414\n");
+	printf(
+			"-----------------------------------------------------------------------MAX: %d4\n", max);
+
+	// RED
+	printf("%c[1m", 27);	// bold on
+	printf("RED  :");
+	printf("%c[0m", 27);	// thin on
+	for (i = 0; i < (int)((80.0 - 7.0) * red / max + 0.5); i++)
+		printf("#");
+	printf("|\n");
+
+	// GREEN
+	printf("%c[1m", 27);	// bold on
+	printf("GREEN:");
+	printf("%c[0m", 27);	// thin on
+	for (i = 0; i < (int)((80.0 - 7.0) * green / max + 0.5); i++)
+		printf("#");
+	printf("|\n");
+
+	// BLUE
+	printf("%c[1m", 27);	// bold on
+	printf("BLUE :");
+	printf("%c[0m", 27);	// thin on
+	for (i = 0; i < (int)((80.0 - 7.0) * blue / max + 0.5); i++)
+		printf("#");
+	printf("|\n");
+
+	// RED
+	printf("%c[1m", 27);	// bold on
+	printf("BRIGHTNESS:");
+	printf("%c[0m", 27);	// thin on
+	for (i = 0; i < (int)((80.0 - 12.0) * clear / max + 0.5); i++)
+		printf("-");
+	printf("|\n");
 }
 
 /*
@@ -134,11 +198,15 @@ int main(int argc, char *argv[]) {
 	TCS3414_Init();
 
 	while (1) {
-		TCS3414_ReadColors(&green, &red, &blue, &clear);
-		printf("Red: %5d Green: %5d Blue: %5d Clear: %5d\n", red, green, blue, clear);
-		//TCS3414_ReadColor(&clear);
-		//printf("brightness: %d\n", clear);
-		usleep(1000000);
+		//TCS3414_ReadColors(&green, &red, &blue, &clear);
+		TCS3414_ReadColor(GREEN, &green);
+		TCS3414_ReadColor(RED, &red);
+		TCS3414_ReadColor(BLUE, &blue);
+		TCS3414_ReadColor(CLEAR, &clear);
+		//printf("Red:%3d\tGreen:%3d\tBlue:%3d\tClear:%3d\n", red, green, blue, clear);
+		print_rgb(red, green, blue, clear);
+		usleep(100000);
+
 	}
 
 	/*
@@ -191,4 +259,3 @@ int main(int argc, char *argv[]) {
 
 	return 0;
 }
-
