@@ -116,8 +116,8 @@ void signal_callback_handler(int signum) {
  *
  */
 
-void print_rgb(UINT16 red, UINT16 green, UINT16 blue, UINT16 clear) {
-	static int max = 1;
+int print_rgb(UINT16 red, UINT16 green, UINT16 blue, UINT16 clear) {
+	int max = 1;
 	int i;
 
 	/* find max color value to display all values relative to that */
@@ -127,8 +127,10 @@ void print_rgb(UINT16 red, UINT16 green, UINT16 blue, UINT16 clear) {
 		max = green;
 	if (blue > max)
 		max = blue;
-	if (clear > max)
-		max = clear;
+	//if (clear > max)
+	//	max = clear;
+
+
 
 	/* print header*/
 	printf("%c[2J", 27);	// clear entire screen
@@ -137,13 +139,14 @@ void print_rgb(UINT16 red, UINT16 green, UINT16 blue, UINT16 clear) {
 	printf("%c[1m", 27);	// bold on
 	printf("Color values from sensor TCS3414\n");
 	printf(
-			"-----------------------------------------------------------------------MAX: %d4\n", max);
+			"-----------------------------------------------------------------------MAX: %d4\n",
+			max);
 
 	/* Print RED color */
 	printf("%c[1m", 27);	// bold on
 	printf("RED  :");
 	printf("%c[0m", 27);	// thin on
-	for (i = 0; i < (int)((80.0 - 7.0) * red / max + 0.5); i++)
+	for (i = 0; i < (int) ((80.0 - 7.0) * red / max + 0.5); i++)
 		printf("#");
 	printf("|\n");
 
@@ -151,7 +154,7 @@ void print_rgb(UINT16 red, UINT16 green, UINT16 blue, UINT16 clear) {
 	printf("%c[1m", 27);	// bold on
 	printf("GREEN:");
 	printf("%c[0m", 27);	// thin on
-	for (i = 0; i < (int)((80.0 - 7.0) * green / max + 0.5); i++)
+	for (i = 0; i < (int) ((80.0 - 7.0) * green / max + 0.5); i++)
 		printf("#");
 	printf("|\n");
 
@@ -159,17 +162,20 @@ void print_rgb(UINT16 red, UINT16 green, UINT16 blue, UINT16 clear) {
 	printf("%c[1m", 27);	// bold on
 	printf("BLUE :");
 	printf("%c[0m", 27);	// thin on
-	for (i = 0; i < (int)((80.0 - 7.0) * blue / max + 0.5); i++)
+	for (i = 0; i < (int) ((80.0 - 7.0) * blue / max + 0.5); i++)
 		printf("#");
 	printf("|\n");
 
 	/* Print Clear (brightness) */
+	/*
 	printf("%c[1m", 27);	// bold on
 	printf("BRIGHTNESS:");
 	printf("%c[0m", 27);	// thin on
-	for (i = 0; i < (int)((80.0 - 12.0) * clear / max + 0.5); i++)
+	for (i = 0; i < (int) ((80.0 - 12.0) * clear / max + 0.5); i++)
 		printf("-");
 	printf("|\n");
+	*/
+	return max;
 }
 
 /*
@@ -179,6 +185,7 @@ void print_rgb(UINT16 red, UINT16 green, UINT16 blue, UINT16 clear) {
  */
 int main(int argc, char *argv[]) {
 	UINT16 green, red, blue, clear;
+	int max = 0;
 
 	/* Register signal and signal handler */
 	signal(SIGINT, signal_callback_handler);
@@ -196,62 +203,73 @@ int main(int argc, char *argv[]) {
 	sleep(2);
 
 
+	/* endless loop */
 	while (1) {
-		//TCS3414_ReadColors(&green, &red, &blue, &clear);
+		/* read colors from sensor */
 		TCS3414_ReadColor(GREEN, &green);
 		TCS3414_ReadColor(RED, &red);
 		TCS3414_ReadColor(BLUE, &blue);
 		TCS3414_ReadColor(CLEAR, &clear);
-		//printf("Red:%3d\tGreen:%3d\tBlue:%3d\tClear:%3d\n", red, green, blue, clear);
-		print_rgb(red, green, blue, clear);
+
+		/* normalize colors (based on empirical values) */
+		red /=1.97;
+		green /= 1.6;
+
+		/* print colors on console (and keep max value found */
+		max = print_rgb(red, green, blue, clear);
+
+		/* loop frequency: 10 Hz */
 		usleep(100000);
 
+		/* Scale RGB Values to 8 Bit */
+		// max/x=255 --> x = max/255
+		if(max > 1){
+			red = red/(max/255.0);
+			green = green/(max/255.0);
+			blue = blue/(max/255.0);
+		}
+
+		// Open framebuffer device file for reading and writing
+		fbfd = open("/dev/fb0", O_RDWR);
+		if (fbfd == -1) {
+			perror("Error: cannot open framebuffer device");
+			exit(errno);
+		}
+
+		// Get variable screen information
+		if (ioctl(fbfd, FBIOGET_VSCREENINFO, &fbVarScreenInfo) == -1) {
+			perror("Error reading variable information");
+			close(fbfd);
+			exit(errno);
+		}
+
+		// Figure out the size of the screen in bytes
+		screensize = (fbVarScreenInfo.xres * fbVarScreenInfo.yres
+				* fbVarScreenInfo.bits_per_pixel) / 8;
+
+		// Map the frame buffer device memory to user space.
+		// Starting address in user space is pfb16.
+		if (fbVarScreenInfo.bits_per_pixel == BPP16) {
+			pfb16 = (INT16*) mmap(0, screensize, PROT_READ | PROT_WRITE,
+					MAP_SHARED, fbfd, 0);
+			if (pfb16 == (INT16*) -1) {
+				perror(
+						"Error: failed to map 16-BPP framebuffer device to memory");
+				exit(errno);
+			}
+
+			// Fill the screen with 16 bpp, do it for all [x,y] pixel with desired color
+			for (y = 0; y < fbVarScreenInfo.yres; y++) {
+				for (x = 0; x < fbVarScreenInfo.xres; x++) {
+					pfb16[x + y * fbVarScreenInfo.xres] = CONVERT_RGB24_16BPP(red, green, blue);
+				}
+			}
+		}
 	}
 
-	/*
-
-	 // Open device file for reading and writing
-	 fbfd = open("/dev/fb0", O_RDWR);
-	 if (fbfd == -1) {
-	 perror("Error: cannot open framebuffer device");
-	 exit(errno);
-	 }
-	 printf("The framebuffer device fb0 was opened successfully.\n");
-
-	 // Get variable screen information
-	 if (ioctl(fbfd, FBIOGET_VSCREENINFO, &fbVarScreenInfo) == -1) {
-	 perror("Error reading variable information");
-	 close(fbfd);
-	 exit(errno);
-	 }
-
-	 // Figure out the size of the screen in bytes
-	 screensize = (fbVarScreenInfo.xres * fbVarScreenInfo.yres
-	 * fbVarScreenInfo.bits_per_pixel) / 8;
-
-	 // Map the frame buffer device memory to user space.
-	 // Starting address in user space is pfb16.
-	 if (fbVarScreenInfo.bits_per_pixel == BPP16) {
-	 pfb16 = (INT16*) mmap(0, screensize, PROT_READ | PROT_WRITE, MAP_SHARED,
-	 fbfd, 0);
-	 if (pfb16 == (INT16*) -1) {
-	 perror("Error: failed to map 16-BPP framebuffer device to memory");
-	 exit(errno);
-	 }
-
-	 // Fill the screen with 16 bpp, do it for all [x,y] pixel with desired color
-	 for (y = 0; y < fbVarScreenInfo.yres; y++) {
-	 for (x = 0; x < fbVarScreenInfo.xres; x++) {
-	 pfb16[x + y * fbVarScreenInfo.xres] = BLUE_16BPP;
-	 }
-	 }
-
-	 // Cleanup
-	 munmap(pfb16, screensize);
-	 close(fbfd);
-	 }
-
-	 */
+	// Cleanup
+	munmap(pfb16, screensize);
+	close(fbfd);
 
 	printf("\n");
 	i2c_close();
