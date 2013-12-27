@@ -1,15 +1,15 @@
 /*
  ***************************************************************************
- * \brief   Embedded Linux Framebuffer Exercise 1.1
- *	    Draw some shapes on the Linux framebuffer.
- *	    Not optimized and only a minimal error handling is implemented.
- * \file    appFramefufferShapes.c
+ * \brief   Embedded Linux Module Project Work - Color Sensor
+ *	    	Read colors from color sensor TCS3414 and display them in a
+ *	    	console and also on the display with framebuffer technology.
+ * \file    Farbsensor.c
  * \version 1.0
  * \date    28.10.2013
- * \author  Martin Aebersold
+ * \author  Cyril Stoller
  *
  * \remark  Last Modifications:
- * \remark  V1.0, AOM1, 28.10.2013
+ * 			27.12.2013 comments added
  ***************************************************************************
  */
 
@@ -53,11 +53,6 @@ typedef unsigned int UINT32;
 typedef float FLOAT32;
 typedef double FLOAT64;
 
-struct RGB_COLOR {
-	UINT8 r;
-	UINT8 g;
-	UINT8 b;
-};
 
 /************************************************************************/
 /* Macros and Constants							*/
@@ -117,7 +112,7 @@ void signal_callback_handler(int signum) {
 
 /*
  *
- * Print RGB Values astethically
+ * Print RGB Values on the console
  *
  */
 
@@ -125,6 +120,7 @@ void print_rgb(UINT16 red, UINT16 green, UINT16 blue, UINT16 clear) {
 	static int max = 1;
 	int i;
 
+	/* find max color value to display all values relative to that */
 	if (red > max)
 		max = red;
 	if (green > max)
@@ -134,6 +130,7 @@ void print_rgb(UINT16 red, UINT16 green, UINT16 blue, UINT16 clear) {
 	if (clear > max)
 		max = clear;
 
+	/* print header*/
 	printf("%c[2J", 27);	// clear entire screen
 	printf("%c[f", 27);		// move cursor to upper left of screen ("home")
 
@@ -142,7 +139,7 @@ void print_rgb(UINT16 red, UINT16 green, UINT16 blue, UINT16 clear) {
 	printf(
 			"-----------------------------------------------------------------------MAX: %d4\n", max);
 
-	// RED
+	/* Print RED color */
 	printf("%c[1m", 27);	// bold on
 	printf("RED  :");
 	printf("%c[0m", 27);	// thin on
@@ -150,7 +147,7 @@ void print_rgb(UINT16 red, UINT16 green, UINT16 blue, UINT16 clear) {
 		printf("#");
 	printf("|\n");
 
-	// GREEN
+	/* Print GREEN color */
 	printf("%c[1m", 27);	// bold on
 	printf("GREEN:");
 	printf("%c[0m", 27);	// thin on
@@ -158,7 +155,7 @@ void print_rgb(UINT16 red, UINT16 green, UINT16 blue, UINT16 clear) {
 		printf("#");
 	printf("|\n");
 
-	// BLUE
+	/* Print BLUE color */
 	printf("%c[1m", 27);	// bold on
 	printf("BLUE :");
 	printf("%c[0m", 27);	// thin on
@@ -166,7 +163,7 @@ void print_rgb(UINT16 red, UINT16 green, UINT16 blue, UINT16 clear) {
 		printf("#");
 	printf("|\n");
 
-	// RED
+	/* Print Clear (brightness) */
 	printf("%c[1m", 27);	// bold on
 	printf("BRIGHTNESS:");
 	printf("%c[0m", 27);	// thin on
@@ -181,8 +178,6 @@ void print_rgb(UINT16 red, UINT16 green, UINT16 blue, UINT16 clear) {
  ******************************************************************************
  */
 int main(int argc, char *argv[]) {
-	INT32 fbfd = 0;
-	INT32 screensize = 0;
 	UINT16 green, red, blue, clear;
 
 	/* Register signal and signal handler */
@@ -197,7 +192,9 @@ int main(int argc, char *argv[]) {
 	// Configure the TCS3414 color sensor
 	TCS3414_Init();
 
+	/* sleep to let user capture the init message texts */
 	sleep(2);
+
 
 	while (1) {
 		//TCS3414_ReadColors(&green, &red, &blue, &clear);

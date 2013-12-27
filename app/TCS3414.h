@@ -1,15 +1,15 @@
 /*
  ***************************************************************************
- * \brief   Embedded Linux I2C Exercise 4.3
+ * \brief   Driver for color sensor TCS3414
  *	    	Basic i2c communication with the TCS3414 Color Sensor
- *          on the BBB-BFH-Cape. Show the current color on the console.
- *	    	Only a minimal error handling is implemented.
+ *          on the BBB-BFH-Cape.
  * \file    TCS3414.h
  * \version 1.0
  * \date    09.12.2013
  * \author  Cyril Stoller
  *
  * \remark  Last Modifications:
+ *          27.12.2013 comments added
  ***************************************************************************
  */
 
@@ -28,7 +28,7 @@
 
 #include <linux/i2c-dev.h>
 
-/* TCS3414 Register pointers */
+/* TCS3414 internal Register pointers */
 #define TCS3414_CONTROL		0x00	/* Control Register */
 #define TCS3414_TIMING		0x01	/* Integration Time/Gain Register */
 #define TCS3414_GAIN		0x07	/* ADC Gain Register */
@@ -42,16 +42,17 @@
 #define TCS3414_DATA4LOW	0x16	/* Clear low Register */
 #define TCS3414_DATA4HIGH	0x17	/* Clear high Register */
 
-/* i2c Address of TCS3414 device */
+/* TCS3414 COMMAND CONTROL -> to be OR-linked with register pointer */
+#define TCS3414_BYTE_WISE	0x80
+#define TCS3414_BLOCK_WISE	0xC0
+
+/* I2C ADDRESS OF TCS3414 DEVICE */
 #define TCS3414_I2C_ADDR 	0x39
 
 /* TCS3414 CONTROL REGISTER DATA */
 #define TCS3414_POWER_ON_ADC_EN	0x03
 
-/* TCS3414 COMMAND CONTROL -> to be OR-linked with register pointer */
-#define TCS3414_BYTE_WISE	0x80
-#define TCS3414_BLOCK_WISE	0xC0
-
+/* ENUM FOR COLOR */
 typedef enum {GREEN, RED, BLUE, CLEAR} Color;
 
 /*
@@ -79,14 +80,15 @@ typedef double FLOAT64;
  */
 
 extern INT16 i2c_open(void);
-extern void i2c_close(void);
+extern void  i2c_close(void);
 extern INT16 i2c_set_address(UINT8 i2cAddress);
 extern INT16 i2c_write(UINT8 *i2cBuffer, UINT16 i2cLen);
 extern INT16 i2c_read(UINT8 *i2cBuffer, UINT16 i2cLen);
 extern INT16 TCS3414_Init(void);
-extern void TCS3414_ReadColors(UINT16* green, UINT16* red, UINT16* blue,
+extern void  TCS3414_ReadColors(UINT16* green, UINT16* red, UINT16* blue,
 		UINT16* clear);
-extern void TCS3414_ReadColor(Color color, UINT16* value);
+extern void  TCS3414_ReadColor(Color color, UINT16* value);
 
+/* #ifndef TCS3414_H */
 #endif
 
