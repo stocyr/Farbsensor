@@ -12,6 +12,9 @@
 *.so.*
 *.dylib
 
+# temp txt files
+*~
+
 # Executables
 *.exe
 *.out

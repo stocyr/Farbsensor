@@ -1,4 +1,4 @@
 Farbsensor
 ==========
 
-A small xynth-software in C for the BlackBeagleBoard and the BFH-Cape. Connects to the color sensor and imitades the color on the LCD screen.
+A small xynth-software in C for the BlackBeagleBoard and the BFH-Cape. Connects to the i2c color sensor TCS3414 and imitades the measured color on the LCD screen.
